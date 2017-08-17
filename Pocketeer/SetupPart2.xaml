@@ -1,0 +1,55 @@
+﻿<Page
+    x:Class="Pocketeer.SetupPart2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Pocketeer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="Setup" Padding="20,20,0,0" FontSize="25"/>
+
+        <TextBlock Text="Do you get money?" VerticalAlignment="Center" Padding="10,0,10,0" Grid.Row="1"/>
+        <ToggleSwitch Name="DoesUserGetMoney" Toggled="DoesUserGetMoney_Toggled" IsOn="True" OffContent="No" OnContent="Yes" Grid.Row="1" Grid.Column="1"/>
+
+        <TextBlock Name="WhatDayDoesUserGetMoneyTextBlock" Text="What day do you get money?" VerticalAlignment="Center" Padding="10,0,10,0" Grid.Row="2"/>
+        <ComboBox Name="WhatDayDoesUserGetMoneyComboBox" SelectionChanged="WhatDayDoesUserGetMoneyComboBox_SelectionChanged" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Width="Auto">
+            <ComboBoxItem Content="Monday"/>
+            <ComboBoxItem Content="Tuesday"/>
+            <ComboBoxItem Content="Wednesday"/>
+            <ComboBoxItem Content="Thurday"/>
+            <ComboBoxItem Content="Friday"/>
+            <ComboBoxItem Content="Saturday"/>
+            <ComboBoxItem Content="Sunday"/>
+        </ComboBox>
+
+        <TextBlock Name="HowOftenDoesUserGetMoneyTextBlock" Text="How often do you get money?" Padding="10,0,10,0" Grid.Row="3" VerticalAlignment="Center"/>
+        <ComboBox Name="HowOftenDoesUserGetMoneyComboBox" SelectionChanged="HowOftenDoesUserGetMoneyComboBox_SelectionChanged" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center">
+            <ComboBoxItem Content="Every Week"/>
+            <ComboBoxItem Content="Every Month"/>
+            <ComboBoxItem Content="Every Year"/>
+        </ComboBox>
+        <TextBlock Name="HowMuchMoneyDoesUserGetTextBlock" Text="How much money do you get?" Padding="10,0,10,0" VerticalAlignment="Center" Grid.Row="4"/>
+        <TextBox Name="HowMuchMoneyDoesUserGetTextBox" PlaceholderText="Input it in as 1.00 not £1.00" TextChanged="HowMuchMoneyDoesUserGetTextBox_TextChanged" Grid.Row="4" Grid.Column="1" Height="10"/>
+
+        <TextBlock Name="HowMuchMoneyDoesUserHaveTextBlock" Text="How much money do you have?" Padding="10,0,10,0" VerticalAlignment="Center" Grid.Row="5"/>
+        <TextBox Name="HowMuchMoneyDoesUserHaveTextBox" PlaceholderText="Input it in as 1.00 not £1.00" TextChanged="HowMuchMoneyDoesUserHaveTextBox_TextChanged" Grid.Row="5" Grid.Column="1" Height="10" VerticalAlignment="Center"/>
+
+        <Button Name="NextButton" IsEnabled="False" Click="NextButton_Click" Content="Save" Grid.Row="6" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+    </Grid>
+</Page>

@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="Pocketeer.Setup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Pocketeer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Setup" Padding="20,20,0,0" FontSize="25"/>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1">
+            <TextBlock Text="Hello this is Pocketeer! This will help you track your money." TextAlignment="Center" TextWrapping="WrapWholeWords"/>
+            <TextBlock Text="To get started press the Button below" TextAlignment="Center" TextWrapping="WrapWholeWords"/>
+            <Button Content="Let get started!" Name="NextButton" Click="NextButton_Click" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Page>
