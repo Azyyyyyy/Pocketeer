@@ -7,28 +7,67 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="Grid" Loading="Grid_Loading">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="grid" Loading="grid_Loading">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-        </Grid.ColumnDefinitions>
-        <RelativePanel>
-            <Button FontSize="22" Name="MySplitViewButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"/>
-            <TextBlock Name="Thing" FontSize="20" Text="Infomation" RelativePanel.RightOf="MySplitViewButton" Padding="20,0,0,0" RelativePanel.AlignVerticalCenterWith="MySplitViewButton"/> 
-        </RelativePanel>
-        <SplitView Grid.Row="1" OpenPaneLength="50" CompactPaneLength="10" DisplayMode="CompactOverlay">
-            <SplitView.Pane>
-                <ListBox>
-                    <ListBoxItem>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE700;" VerticalAlignment="Center"/>
-                            <TextBlock Text="Hello" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </ListBoxItem>
-                </ListBox>
-            </SplitView.Pane>
-        </SplitView>
+        <TextBlock Name="TotalMoneyTextBlock" Text="You have got £{Money}" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
+        <TextBlock Name="HowMuchMoneyUserGetsTextBlock" Text="You get £{Money}" Grid.Row="1" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
+        <TextBlock Name="WhatDayMoneyTextBlock" Text="You get your money on {Day}" Grid.Row="2" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
+        <TextBlock Name="WhenDayMoneyAddedTextBlock" Text="That is in {HowMuchDays} Days" Grid.Row="3" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
+
+        <Button Name="AddMoneyToTotalButton" FontSize="16" Content="Add Money" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button.Flyout>
+                <Flyout>
+                    <StackPanel>
+                        <TextBlock Text="How much money do you what to add?" Padding="0,0,0,5"/>
+                        <TextBox Name="AddMoneyTextBox" PlaceholderText="Put money in as 1.00 not £1.00"/>
+                        <TextBlock Height="5"/>
+                        <Button Name="AddMoneyButton" Click="AddMoneyButton_Click" Content="Add">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel>
+                                        <TextBlock Name="TextForAddOkButtonFlyout" Text="You need to put the money in as 1.00 not £1.00!"/>
+                                        <TextBlock Height="5"/>
+                                        <Button Content="Ok" Name="AddOkButton" Click="AddOkButton_Click"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+        <Button Name="RemoveMoneyToTotalButton" FontSize="16" Content="Remove Money" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button.Flyout>
+                <Flyout>
+                    <StackPanel>
+                        <TextBlock Text="How much money do you what to remove?" Padding="0,0,0,5"/>
+                        <TextBox Name="RemoveMoneyTextBox" PlaceholderText="Put money in as 1.00 not £1.00"/>
+                        <TextBlock Height="5"/>
+                        <Button Name="RemoveMoneyButton" Click="RemoveMoneyButton_Click" Content="Remove">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel>
+                                        <TextBlock Name="TextForRemoveOkButtonFlyout" Text="You need to put the money in as 1.00 not £1.00!"/>
+                                        <TextBlock Height="5"/>
+                                        <Button Content="Ok" Name="RemoveOkButton" Click="RemoveOkButton_Click"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
     </Grid>
 </Page>

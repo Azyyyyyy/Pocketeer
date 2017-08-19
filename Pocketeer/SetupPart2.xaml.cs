@@ -30,7 +30,7 @@ namespace Pocketeer
             this.InitializeComponent();
         }
 
-        private async void NextButton_Click(object sender, RoutedEventArgs e)
+        private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             if (DoesUserGetMoney.IsOn)
             {
@@ -44,19 +44,18 @@ namespace Pocketeer
                     localSettings.Values["HowMuchMoneyDoesUserGet"] = HowMuchMoneyDoesUserGetTextBox.Text.ToString();
                     localSettings.Values["HowMuchMoneyDoesUserHave"] = HowMuchMoneyDoesUserHaveTextBox.Text.ToString();
                     localSettings.Values["SetupNeeded"] = "false";
-                    Frame.Navigate(typeof(Infomation));
+                    NextButton.Flyout.Hide();
+                    Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
                 }
                 catch
                 {
-                    MessageDialog dialog = new MessageDialog("Input the money as 1.00 not £1.00", "Pocketeer");
-                    await dialog.ShowAsync();
                 }
             }
             else
             {
                 localSettings.Values["DoesUserGetMoney"] = "false";
                 localSettings.Values["SetupNeeded"] = "false";
-                Frame.Navigate(typeof(Infomation));
+                Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
             }
         }
 
@@ -66,6 +65,9 @@ namespace Pocketeer
             {
                 try
                 {
+                    Grid.SetRow(NextButton, 6);
+                    Grid.SetRow(HowMuchMoneyDoesUserHaveTextBlock, 5);
+                    Grid.SetRow(HowMuchMoneyDoesUserHaveTextBox, 5);
                     NextButton.IsEnabled = false;
                     WhatDayDoesUserGetMoneyTextBlock.Visibility = Visibility.Visible;
                     WhatDayDoesUserGetMoneyComboBox.Visibility = Visibility.Visible;
@@ -85,6 +87,9 @@ namespace Pocketeer
             }
             else
             {
+                Grid.SetRow(HowMuchMoneyDoesUserHaveTextBlock, 2);
+                Grid.SetRow(HowMuchMoneyDoesUserHaveTextBox, 2);
+                Grid.SetRow(NextButton, 3);
                 NextButton.IsEnabled = false;
                 WhatDayDoesUserGetMoneyTextBlock.Visibility = Visibility.Collapsed;
                 WhatDayDoesUserGetMoneyComboBox.Visibility = Visibility.Collapsed;
@@ -156,6 +161,11 @@ namespace Pocketeer
             {
                 NextButton.IsEnabled = false;
             }
+        }
+
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            NextButton.Flyout.Hide();
         }
     }
 }

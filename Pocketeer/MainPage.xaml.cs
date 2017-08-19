@@ -47,7 +47,7 @@ namespace Pocketeer
             }
             else if (SetupNeeded.ToString() == "false")
             {
-                OtherUI.Navigate(typeof(Infomation));
+                OtherUI.Navigate(typeof(FrameForInfoPlusSettingsXAML));
             }
         }
     }
