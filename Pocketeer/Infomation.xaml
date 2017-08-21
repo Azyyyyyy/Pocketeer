@@ -23,7 +23,7 @@
         <TextBlock Name="TotalMoneyTextBlock" Text="You have got £{Money}" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
         <TextBlock Name="HowMuchMoneyUserGetsTextBlock" Text="You get £{Money}" Grid.Row="1" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
         <TextBlock Name="WhatDayMoneyTextBlock" Text="You get your money on {Day}" Grid.Row="2" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
-        <TextBlock Name="WhenDayMoneyAddedTextBlock" Text="That is in {HowMuchDays} Days" Grid.Row="3" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
+        <TextBlock Name="WhenDayMoneyGetsAddedTextBlock" Text="That is in {HowMuchDays} Days" Grid.Row="3" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
 
         <Button Name="AddMoneyToTotalButton" FontSize="16" Content="Add Money" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button.Flyout>

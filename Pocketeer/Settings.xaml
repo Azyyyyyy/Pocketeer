@@ -7,40 +7,53 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="grid" Loading="grid_Loading">
-        <StackPanel>
-            
-            <RelativePanel Padding="20,20,0,0">
-                <Image Source="Assets/black-icon.png" Name="AppIcon" Stretch="Uniform" Width="50" RelativePanel.AlignLeftWithPanel="True"/>
-                <TextBlock Padding="10,0,0,0" FontSize="20" RelativePanel.AlignVerticalCenterWith="AppIcon" RelativePanel.RightOf="AppIcon" Text="Pocketeer"/>
-                <StackPanel Orientation="Vertical" RelativePanel.Below="AppIcon">
-                    <TextBlock Name="InfomationTextBlock" Padding="0,20,0,0" TextWrapping="WrapWholeWords" Text="This will help you track your money." RelativePanel.Below="AppIcon"/>
+    <Grid Padding="20,20,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="grid" Loading="grid_Loading">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-                    <TextBlock Padding="0,20,0,0" FontSize="40" RelativePanel.Below="InfomationTextBlock" Text="Theme"/>
-                    <RadioButton Name="LightRadioButton" Click="LightRadioButton_Click">
-                        <RadioButton.Content>
-                            <TextBlock Text="Light"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-                    <RadioButton Name="DarkRadioButton" Click="DarkRadioButton_Click">
-                        <RadioButton.Content>
-                            <TextBlock Text="Dark"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-                    <RadioButton Name="UseSystemThemeRadioButton" Click="UseSystemThemeRadioButton_Click">
-                        <RadioButton.Content>
-                            <TextBlock TextWrapping="WrapWholeWords" Text="Use System Theme"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-                    <TextBlock TextWrapping="WrapWholeWords" Text="* App will need to be restarted to take effect"/>
-                    <StackPanel Orientation="Horizontal" Padding="0,10,0,0">
-                        <Image Source="github(black)-icon.png" Name="GithubIcon" Width="25" Height="25"/>
-                        <HyperlinkButton Padding="20,0,0,0" NavigateUri="http://www.github.com/DMP9Labs/Pocketeer" Content="Click me to see the code behind Pocketeer!"/>
-                    </StackPanel>
-                </StackPanel>
-            </RelativePanel>
+        <RelativePanel>
+            <Image Source="Assets/black-icon.png" Name="AppIcon" Stretch="Uniform" Width="50" RelativePanel.AlignLeftWithPanel="True"/>
+            <TextBlock Padding="10,0,0,0" FontSize="20" RelativePanel.AlignVerticalCenterWith="AppIcon" RelativePanel.RightOf="AppIcon" Text="Pocketeer"/>
+            <TextBlock Name="InfomationTextBlock" Padding="0,20,0,0" TextWrapping="WrapWholeWords" Text="This will help you track your money." RelativePanel.Below="AppIcon"/>
+        </RelativePanel>
+
+        <StackPanel Grid.Row="1">
+            <TextBlock Padding="0,20,0,0" FontSize="40" Text="Theme"/>
+            <RadioButton Name="LightRadioButton" Click="LightRadioButton_Click">
+                <RadioButton.Content>
+                    <TextBlock Text="Light"/>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton Name="DarkRadioButton" Click="DarkRadioButton_Click">
+                <RadioButton.Content>
+                    <TextBlock Text="Dark"/>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton Name="UseSystemThemeRadioButton" Click="UseSystemThemeRadioButton_Click">
+                <RadioButton.Content>
+                    <TextBlock TextWrapping="WrapWholeWords" Text="Use System Theme"/>
+                </RadioButton.Content>
+            </RadioButton>
+            <TextBlock TextWrapping="WrapWholeWords" Text="* App will need to be restarted to take effect"/>
+            <StackPanel Orientation="Horizontal" Padding="0,10,0,0">
+                <Image Source="github(black)-icon.png" Name="GithubIcon" Width="25" Height="25"/>
+                <HyperlinkButton Padding="20,0,0,0" NavigateUri="http://www.github.com/DMP9Labs/Pocketeer" Content="Click me to see the code behind Pocketeer!"/>
+            </StackPanel>
+            <TextBlock Height="20"/>
         </StackPanel>
-        <TextBlock Text=" {AppVersion}" Name="AppVersionTextBlock" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        
+        <Button Grid.Row="2" VerticalAlignment="Top" Name="ResetDataButton" Click="ResetDataButton_Click" Content="Reset Data">
+            <Button.Flyout>
+                <Flyout Placement="Top">
+                    <TextBlock TextWrapping="WrapWholeWords" Text="Done. Pocketeer is going to quit, Setup will show up next time you open Pocketeer" Width="430"/>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+        <TextBlock Grid.RowSpan="3" Text=" {AppVersion}" Name="AppVersionTextBlock" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         
     </Grid>
 </Page>

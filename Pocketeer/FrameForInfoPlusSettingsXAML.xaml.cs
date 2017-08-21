@@ -33,7 +33,11 @@ namespace Pocketeer
         private void Grid_Loading(FrameworkElement sender, object args)
         {
             Object RequestedThemeInfo = localSettings.Values["RequestedTheme"];
-            if (RequestedThemeInfo.ToString() == "Dark")
+            if (RequestedThemeInfo == null)
+            {
+                //RequestedTheme = Application.Current.Resources["SystemAccentColor"];
+            }
+            else if (RequestedThemeInfo.ToString() == "Dark")
             {
                 RequestedTheme = ElementTheme.Dark;
             }

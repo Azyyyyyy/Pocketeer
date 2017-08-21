@@ -15,7 +15,7 @@
         <TextBlock Text="Setup" Padding="20,20,0,0" FontSize="25"/>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1">
             <TextBlock Text="Hello this is Pocketeer! This will help you track your money." TextAlignment="Center" TextWrapping="WrapWholeWords"/>
-            <TextBlock Text="To get started press the Button below" TextAlignment="Center" TextWrapping="WrapWholeWords"/>
+            <TextBlock Padding="0,0,0,20" Text="To get started press the Button below" TextAlignment="Center" TextWrapping="WrapWholeWords"/>
             <Button Content="Let get started!" Name="NextButton" Click="NextButton_Click" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>

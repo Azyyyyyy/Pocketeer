@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -34,9 +35,207 @@ namespace Pocketeer
         {
             if (DoesUserGetMoney.IsOn)
             {
+                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 0)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(1));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Saturday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 0)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(2));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Friday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 0)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(3));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Thursday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 0)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(4));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 0)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(5));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Tuesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 0)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(6));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 0)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(7));
+                }
+                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 1)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(2));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Saturday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 1)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(3));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Friday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 1)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(4));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Thursday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 1)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(5));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 1)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(6));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Tuesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 1)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(7));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 1)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(1));
+                }
+                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 2)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(3));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Saturday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 2)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(4));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Friday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 2)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(5));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Thursday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 2)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(6));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 2)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(7));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Tuesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 2)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(1));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 2)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(2));
+                }
+                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 3)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(4));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Saturday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 3)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(5));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Friday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 3)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(6));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Thursday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 3)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(7));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 3)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(1));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Tuesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 3)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(2));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 3)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(3));
+                }
+                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 4)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(5));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Saturday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 4)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(6));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Friday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 4)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(7));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Thursday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 4)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(1));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 4)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(2));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Tuesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 4)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(3));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 4)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(4));
+                }
+                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 5)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(6));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Saturday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 5)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(7));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Friday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 5)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(1));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Thursday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 5)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(2));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 5)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(3));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Tuesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 5)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(4));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 5)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(5));
+                }
+                if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 6)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(7));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Saturday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 6)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(1));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Friday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 6)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(2));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Thursday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 6)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(3));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Wednesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 6)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(4));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Tuesday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 6)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(5));
+                }
+                else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Monday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 6)
+                {
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(6));
+                }
+
                 localSettings.Values["DoesUserGetMoney"] = "true";
                 localSettings.Values["WhatDayDoesUserGetMoney"] = WhatDayDoesUserGetMoneyComboBox.SelectionBoxItem.ToString();
                 localSettings.Values["HowOftenDoesUserGetMoney"] = HowOftenDoesUserGetMoneyComboBox.SelectionBoxItem.ToString();
+
                 try
                 {
                     int HowMuchMoneyDoesUserGetInt = Convert.ToInt32(HowMuchMoneyDoesUserGetTextBox.Text.ToString());
@@ -53,9 +252,17 @@ namespace Pocketeer
             }
             else
             {
-                localSettings.Values["DoesUserGetMoney"] = "false";
-                localSettings.Values["SetupNeeded"] = "false";
-                Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
+                try
+                {
+                    int HowMuchMoneyDoesUserHaveInt = Convert.ToInt32(HowMuchMoneyDoesUserHaveTextBox.Text.ToString());
+                    localSettings.Values["HowMuchMoneyDoesUserHave"] = HowMuchMoneyDoesUserHaveTextBox.Text.ToString();
+                    localSettings.Values["DoesUserGetMoney"] = "false";
+                    localSettings.Values["SetupNeeded"] = "false";
+                    Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
+                }
+                catch
+                {
+                }
             }
         }
 

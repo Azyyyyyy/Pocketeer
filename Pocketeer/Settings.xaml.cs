@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -40,7 +41,13 @@ namespace Pocketeer
         private void grid_Loading(FrameworkElement sender, object args)
         {
             Object RequestedThemeInfo = localSettings.Values["RequestedTheme"];
-            if (RequestedThemeInfo.ToString() == "Dark")
+            if (RequestedThemeInfo == null)
+            {
+                AppIcon.Source = Black;
+                GithubIcon.Source = Black_Github;
+                LightRadioButton.IsChecked = true;
+            }
+            else if (RequestedThemeInfo.ToString() == "Dark")
             {
                 AppIcon.Source = White;
                 GithubIcon.Source = White_Github;
@@ -86,6 +93,19 @@ namespace Pocketeer
             {
                 localSettings.Values["RequestedTheme"] = "Light";
             }
+        }
+
+        private async void ResetDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(1000 * 5);
+            localSettings.Values["DoesUserGetMoney"] = null;
+            localSettings.Values["WhatDayDoesUserGetMoney"] = null;
+            localSettings.Values["HowOftenDoesUserGetMoney"] = null;
+            localSettings.Values["HowMuchMoneyDoesUserGet"] = null;
+            localSettings.Values["HowMuchMoneyDoesUserHave"] = null;
+            localSettings.Values["SetupNeeded"] = null;
+
+            Application.Current.Exit();
         }
     }
 }

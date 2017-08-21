@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -107,11 +108,26 @@ namespace Pocketeer
 
         private void grid_Loading(FrameworkElement sender, object args)
         {
-            //localSettings.Values["HowOftenDoesUserGetMoney"] = HowOftenDoesUserGetMoneyComboBox.SelectionBoxItem.ToString();
+            MoneyClass.UpdateTotalMoneyAndWhenMoneyNeedsGoingInNext();
+
+            DateTime NextTimeMoneyNeedsToBeAdded = Convert.ToDateTime(localSettings.Values["WhenMoneyNeedsGoingIn"]);
+            TimeSpan elapsed = DateTime.Now.Date.Subtract(NextTimeMoneyNeedsToBeAdded);
+            int elapsedint = Convert.ToInt32(-elapsed.TotalDays);
 
             TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString()}";
-            HowMuchMoneyUserGetsTextBlock.Text = $"You get £{MoneyUserGets.ToString()}";
-            WhatDayMoneyTextBlock.Text = $"You get your money on {DayMoneyIsPutIn.ToString()}";
+            if (MoneyUserGets == null)
+            {
+                HowMuchMoneyUserGetsTextBlock.Visibility = Visibility.Collapsed;
+                WhatDayMoneyTextBlock.Visibility = Visibility.Collapsed;
+                WhenDayMoneyGetsAddedTextBlock.Visibility = Visibility.Collapsed;
+                Grid.SetRowSpan(TotalMoneyTextBlock, 4);
+            }
+            else
+            {
+                HowMuchMoneyUserGetsTextBlock.Text = $"You get £{MoneyUserGets.ToString()}";
+                WhatDayMoneyTextBlock.Text = $"You get your money on {DayMoneyIsPutIn.ToString()}";
+                WhenDayMoneyGetsAddedTextBlock.Text = $"That is in {elapsedint} days";
+            }
         }
 
         private void RemoveOkButton_Click(object sender, RoutedEventArgs e)
