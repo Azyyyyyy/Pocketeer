@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,12 +24,9 @@ namespace Pocketeer
     {
 
         static Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-        Object TotalMoney = localSettings.Values["HowMuchMoneyDoesUserHave"];
+        double TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
         Object MoneyUserGets = localSettings.Values["HowMuchMoneyDoesUserGet"];
-        Object DayMoneyIsPutIn = localSettings.Values["WhatDayDoesUserGetMoney"];
-        string TextForAddOkButtonFlyoutBackup = "";
-        string TextForRemoveOkButtonFlyoutBackup = "";
-        int TotalMoneyInt = 0;
+        string FlyoutTextBackup = "";
 
         public Infomation()
         {
@@ -39,7 +35,7 @@ namespace Pocketeer
 
         private void AddMoneyButton_Click(object sender, RoutedEventArgs e)
         {
-            TextForAddOkButtonFlyoutBackup = TextForAddOkButtonFlyout.Text;
+            FlyoutTextBackup = TextForAddOkButtonFlyout.Text;
             if (AddMoneyTextBox.Text.Length == 0)
             {
                 TextForAddOkButtonFlyout.Text = "Put in how much money you what to add!";
@@ -48,19 +44,21 @@ namespace Pocketeer
             {
                 try
                 {
-                    if (Convert.ToInt32(AddMoneyTextBox.Text.ToString()) == 0)
+                    if (Convert.ToDouble(AddMoneyTextBox.Text.ToString()) == 0)
                     {
                         TextForAddOkButtonFlyout.Text = "You can't add no money!";
                     }
                     else
                     {
-                        TotalMoneyInt = Convert.ToInt32(TotalMoney.ToString()) + Convert.ToInt32(AddMoneyTextBox.Text.ToString());
-                        localSettings.Values["HowMuchMoneyDoesUserHave"] = TotalMoneyInt;
-                        TotalMoney = localSettings.Values["HowMuchMoneyDoesUserHave"];
-                        TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString()}";
+                        localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToDouble(TotalMoney.ToString()) + Convert.ToDouble(AddMoneyTextBox.Text.ToString());
+                        TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
+                        TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString("0.00")}";
                         AddMoneyTextBox.Text = "";
-                        AddMoneyButton.Flyout.Hide();
                         AddMoneyToTotalButton.Flyout.Hide();
+                        if (!RemoveMoneyToTotalButton.IsEnabled)
+                        {
+                            RemoveMoneyToTotalButton.IsEnabled = true;
+                        }
                     }
                 }
                 catch
@@ -71,8 +69,8 @@ namespace Pocketeer
 
         private void RemoveMoneyButton_Click(object sender, RoutedEventArgs e)
         {
-            TextForRemoveOkButtonFlyoutBackup = TextForRemoveOkButtonFlyout.Text;
-            TotalMoneyInt = Convert.ToInt32(localSettings.Values["HowMuchMoneyDoesUserHave"]);
+            FlyoutTextBackup = TextForRemoveOkButtonFlyout.Text;
+            double TotalMoneyDouble = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
             if (RemoveMoneyTextBox.Text.Length == 0)
             {
                 TextForRemoveOkButtonFlyout.Text = "Put in how much money you what to remove!";
@@ -81,23 +79,26 @@ namespace Pocketeer
             {
                 try
                 {
-                    if (Convert.ToInt32(RemoveMoneyTextBox.Text.ToString()) == 0)
+                    if (Convert.ToDouble(RemoveMoneyTextBox.Text.ToString()) == 0)
                     {
                         TextForRemoveOkButtonFlyout.Text = "You can't remove no money!";
                     }
-                    else if (Convert.ToInt32(RemoveMoneyTextBox.Text.ToString()) > TotalMoneyInt)
+                    else if (Convert.ToDouble(RemoveMoneyTextBox.Text.ToString()) > TotalMoneyDouble)
                     {
                         TextForRemoveOkButtonFlyout.Text = "You can't remove more then you got!";
                     }
                     else
                     {
-                        TotalMoneyInt = Convert.ToInt32(TotalMoney.ToString()) - Convert.ToInt32(RemoveMoneyTextBox.Text.ToString());
-                        localSettings.Values["HowMuchMoneyDoesUserHave"] = TotalMoneyInt;
-                        TotalMoney = localSettings.Values["HowMuchMoneyDoesUserHave"];
-                        TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString()}";
+                        TotalMoneyDouble = Convert.ToDouble(TotalMoney.ToString()) - Convert.ToDouble(RemoveMoneyTextBox.Text.ToString());
+                        localSettings.Values["HowMuchMoneyDoesUserHave"] = TotalMoneyDouble;
+                        TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
+                        TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString("0.00")}";
                         RemoveMoneyTextBox.Text = "";
-                        RemoveMoneyButton.Flyout.Hide();
                         RemoveMoneyToTotalButton.Flyout.Hide();
+                        if (TotalMoneyDouble == 0)
+                        {
+                            RemoveMoneyToTotalButton.IsEnabled = false;
+                        }
                     }
                 }
                 catch
@@ -110,11 +111,27 @@ namespace Pocketeer
         {
             MoneyClass.UpdateTotalMoneyAndWhenMoneyNeedsGoingInNext();
 
-            DateTime NextTimeMoneyNeedsToBeAdded = Convert.ToDateTime(localSettings.Values["WhenMoneyNeedsGoingIn"]);
-            TimeSpan elapsed = DateTime.Now.Date.Subtract(NextTimeMoneyNeedsToBeAdded);
+            TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
+            Object DateMoneyIsAddedToTotal = localSettings.Values["WhatDayDoesUserGetMoney"];
+            DateTime DateMoneyIsAddedToTotalDateTime = DateTime.Now;
+            try
+            {
+                DateMoneyIsAddedToTotalDateTime = Convert.ToDateTime(localSettings.Values["WhatDayDoesUserGetMoney"]);
+            }
+            catch
+            {
+            }
+
+            if (TotalMoney.ToString() == "0")
+            {
+                RemoveMoneyToTotalButton.IsEnabled = false;
+            }
+
+            DateTime NextTimeMoneyNeedsToBeAdded = Convert.ToDateTime(localSettings.Values["WhenMoneyNeedsGoingIn"]).Date;
+            TimeSpan elapsed = DateTime.Now.Date.Subtract(NextTimeMoneyNeedsToBeAdded.Date);
             int elapsedint = Convert.ToInt32(-elapsed.TotalDays);
 
-            TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString()}";
+            TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString("0.00")}";
             if (MoneyUserGets == null)
             {
                 HowMuchMoneyUserGetsTextBlock.Visibility = Visibility.Collapsed;
@@ -125,20 +142,28 @@ namespace Pocketeer
             else
             {
                 HowMuchMoneyUserGetsTextBlock.Text = $"You get £{MoneyUserGets.ToString()}";
-                WhatDayMoneyTextBlock.Text = $"You get your money on {DayMoneyIsPutIn.ToString()}";
+
+                if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Week")
+                {
+                    WhatDayMoneyTextBlock.Text = $"You get your money on {DateMoneyIsAddedToTotal.ToString()}";
+                }
+                else
+                {
+                    WhatDayMoneyTextBlock.Text = $"You get your money on {DateMoneyIsAddedToTotalDateTime.ToString("dd/MM/yy")}";
+                }
                 WhenDayMoneyGetsAddedTextBlock.Text = $"That is in {elapsedint} days";
             }
         }
 
         private void RemoveOkButton_Click(object sender, RoutedEventArgs e)
         {
-            TextForRemoveOkButtonFlyout.Text = TextForRemoveOkButtonFlyoutBackup;
+            TextForRemoveOkButtonFlyout.Text = FlyoutTextBackup;
             RemoveMoneyButton.Flyout.Hide();
         }
 
         private void AddOkButton_Click(object sender, RoutedEventArgs e)
         {
-            TextForAddOkButtonFlyout.Text = TextForAddOkButtonFlyoutBackup;
+            TextForAddOkButtonFlyout.Text = FlyoutTextBackup;
             AddMoneyButton.Flyout.Hide();
         }
     }

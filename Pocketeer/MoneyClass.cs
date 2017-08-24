@@ -14,26 +14,30 @@ namespace Pocketeer
         {
             DateTime NextTimeMoneyNeedsToBeAdded = Convert.ToDateTime(localSettings.Values["WhenMoneyNeedsGoingIn"]);
             DateTime LastTimeAppWasOpened = Convert.ToDateTime(localSettings.Values["LastTimeAppWasOpened"]);
-            int AmountOfMoneyGoingIn = Convert.ToInt32(localSettings.Values["HowMuchMoneyDoesUserGet"]);
+            double AmountOfMoneyGoingIn = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserGet"]);
 
             LastTimeAppWasOpened = DateTime.Parse(LastTimeAppWasOpened.ToString());
             TimeSpan elapsed = DateTime.Now.Date.Subtract(LastTimeAppWasOpened);
 
             void UpdateWhenMoneyNeedsToGoIn(double elapsedint, int Days)
             {
-                DateTime LastTimeAppWasOpenedForVoid = Convert.ToDateTime(localSettings.Values["LastTimeAppWasOpened"]);
-
                 if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Week")
                 {
                     localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(Days));
                 }
                 else if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Month")
                 {
-                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(LastTimeAppWasOpenedForVoid.Date.AddMonths((int)elapsedint + 1));
+                    DateTime date = NextTimeMoneyNeedsToBeAdded;
+                    date = date.AddMonths(Convert.ToInt32(elapsedint));
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(date);
+                    localSettings.Values["WhatDayDoesUserGetMoney"] = Convert.ToString(date);
                 }
                 else if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Year")
                 {
-                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(LastTimeAppWasOpenedForVoid.Date.AddYears((int)elapsedint + 1));
+                    DateTime date = NextTimeMoneyNeedsToBeAdded;
+                    date = date.AddYears(Convert.ToInt32(elapsedint));
+                    localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(date);
+                    localSettings.Values["WhatDayDoesUserGetMoney"] = Convert.ToString(date);
                 }
             }
 
@@ -43,16 +47,10 @@ namespace Pocketeer
             }
             else
             {
-                elapsed = DateTime.Now.Date.Subtract(NextTimeMoneyNeedsToBeAdded);
+                elapsed = DateTime.Now.Date.Subtract(NextTimeMoneyNeedsToBeAdded.Date);
                 double elapsedint = Convert.ToInt32(elapsed.TotalDays);
                 if (elapsedint >= 0)
                 {
-                    if (elapsedint == 0)
-                    {
-                        localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToInt32(localSettings.Values["HowMuchMoneyDoesUserHave"]) + AmountOfMoneyGoingIn;
-                    }
-                    else
-                    {
                         if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Week")
                         {
                             elapsedint = (elapsedint / 7) + 1;
@@ -66,9 +64,17 @@ namespace Pocketeer
                             elapsedint = (elapsedint / 365) + 1;
                         }
                         int HowManyTimesToAddMoney = (int)elapsedint;
-                        localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToInt32(localSettings.Values["HowMuchMoneyDoesUserHave"]) + (AmountOfMoneyGoingIn * HowManyTimesToAddMoney);
+                        localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]) + (AmountOfMoneyGoingIn * HowManyTimesToAddMoney);
 
-                        if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && localSettings.Values["WhatDayDoesUserGetMoney"].ToString() == "Monday")
+                        if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Month")
+                        {
+                            UpdateWhenMoneyNeedsToGoIn(elapsedint, 0);
+                        }
+                        else if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Year")
+                        {
+                            UpdateWhenMoneyNeedsToGoIn(elapsedint, 0);
+                        }
+                        else if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && localSettings.Values["WhatDayDoesUserGetMoney"].ToString() == "Monday")
                         {
                             UpdateWhenMoneyNeedsToGoIn(elapsedint, 1);
                         }
@@ -268,6 +274,4 @@ namespace Pocketeer
                 }
             }
         }
-
     }
-}

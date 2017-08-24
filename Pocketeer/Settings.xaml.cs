@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -41,13 +42,8 @@ namespace Pocketeer
         private void grid_Loading(FrameworkElement sender, object args)
         {
             Object RequestedThemeInfo = localSettings.Values["RequestedTheme"];
-            if (RequestedThemeInfo == null)
-            {
-                AppIcon.Source = Black;
-                GithubIcon.Source = Black_Github;
-                LightRadioButton.IsChecked = true;
-            }
-            else if (RequestedThemeInfo.ToString() == "Dark")
+            var AppTheme = App.Current.RequestedTheme.ToString();
+            if (RequestedThemeInfo.ToString() == "Dark")
             {
                 AppIcon.Source = White;
                 GithubIcon.Source = White_Github;
@@ -61,6 +57,16 @@ namespace Pocketeer
             }
             else if (RequestedThemeInfo.ToString() == "FromUsersSettings")
             {
+                if (AppTheme == "Light")
+                {
+                    AppIcon.Source = Black;
+                    GithubIcon.Source = Black_Github;
+                }
+                else
+                {
+                    AppIcon.Source = White;
+                    GithubIcon.Source = White_Github;
+                }
                 UseSystemThemeRadioButton.IsChecked = true;
             }
 

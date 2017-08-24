@@ -35,7 +35,6 @@ namespace Pocketeer
             Object RequestedThemeInfo = localSettings.Values["RequestedTheme"];
             if (RequestedThemeInfo == null)
             {
-                //RequestedTheme = Application.Current.Resources["SystemAccentColor"];
             }
             else if (RequestedThemeInfo.ToString() == "Dark")
             {
