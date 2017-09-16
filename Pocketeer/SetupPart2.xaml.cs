@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -25,6 +26,7 @@ namespace Pocketeer
     public sealed partial class SetupPart2 : Page
     {
         Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        string NextButtonFlyoutTextBlockBackup = "";
 
         public SetupPart2()
         {
@@ -33,34 +35,47 @@ namespace Pocketeer
 
         void DoesSaveButtonNeedToBeEnabled()
         {
-            if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex >= 0 && HowMuchMoneyDoesUserGetTextBox.Text.Length >= 1 && HowMuchMoneyDoesUserHaveTextBox.Text.Length >= 1)
+            if (DoesUserGetMoney.IsOn)
             {
-                if (WhatDayDoesUserGetMoneyComboBox.Visibility == Visibility.Visible && WhatDayDoesUserGetMoneyComboBox.SelectedIndex >= 0)
+                if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex >= 0 && HowMuchMoneyDoesUserGetTextBox.Text.Length >= 1 && HowMuchMoneyDoesUserHaveTextBox.Text.Length >= 1)
                 {
-                    NextButton.IsEnabled = true;
-                }
-                else if (WhatDayDoesUserGetMoneyComboBox.Visibility == Visibility.Collapsed)
-                {
-                    NextButton.IsEnabled = true;
-                }
-                else if (WhatDayDoesUserGetMoneyComboBox == null)
-                {
-                    NextButton.IsEnabled = false;
+                    if (WhatDayDoesUserGetMoneyComboBox.Visibility == Visibility.Visible && WhatDayDoesUserGetMoneyComboBox.SelectedIndex >= 0)
+                    {
+                        NextButton.IsEnabled = true;
+                    }
+                    else if (WhatDayDoesUserGetMoneyComboBox.Visibility == Visibility.Collapsed)
+                    {
+                        NextButton.IsEnabled = true;
+                    }
+                    else if (WhatDayDoesUserGetMoneyComboBox == null)
+                    {
+                        NextButton.IsEnabled = false;
+                    }
+                    else
+                    {
+                        NextButton.IsEnabled = false;
+                    }
                 }
                 else
                 {
                     NextButton.IsEnabled = false;
                 }
             }
-            else
+            else if (HowMuchMoneyDoesUserHaveTextBox.Text.Length >= 1)
             {
-                NextButton.IsEnabled = false;
+                NextButton.IsEnabled = true;
             }
         }
 
 
-        private void NextButton_Click(object sender, RoutedEventArgs e)
+        private async void NextButton_Click(object sender, RoutedEventArgs e)
         {
+            NextButton.Flyout.Hide();
+            string pattern = "£";
+            string replacement = "";
+            Regex rgx = new Regex(pattern);
+            HowMuchMoneyDoesUserGetTextBox.Text = rgx.Replace(HowMuchMoneyDoesUserGetTextBox.Text, replacement);
+            HowMuchMoneyDoesUserHaveTextBox.Text = rgx.Replace(HowMuchMoneyDoesUserHaveTextBox.Text, replacement);
             if (DoesUserGetMoney.IsOn)
             {
                 if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 0)
@@ -260,6 +275,17 @@ namespace Pocketeer
                     localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(6));
                 }
 
+                DateTime dateTime = DateTime.Now.Date;
+
+                if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 1)
+                {
+                    dateTime = DateThatMoneyGoesIn.Date.DateTime.Date;
+                }
+                else if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 2)
+                {
+                    dateTime = DateAndMonthThatMoneyGoesIn.Date.DateTime.Date;
+                }
+                int DateCheck = DateTime.Now.Date.CompareTo(dateTime.Date);
                 localSettings.Values["DoesUserGetMoney"] = "true";
                 if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 0)
                 {
@@ -267,8 +293,6 @@ namespace Pocketeer
                 }
                 else if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 1)
                 {
-                    DateTime dateTime = DateThatMoneyGoesIn.Date.DateTime.Date;
-                    int DateCheck = DateTime.Now.Date.CompareTo(dateTime.Date);
                     if (DateCheck >= 0)
                     {
                         dateTime = dateTime.AddMonths(1);
@@ -278,8 +302,6 @@ namespace Pocketeer
                 }
                 else if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 2)
                 {
-                    DateTime dateTime = DateAndMonthThatMoneyGoesIn.Date.DateTime.Date;
-                    int DateCheck = DateTime.Now.Date.CompareTo(dateTime.Date);
                     if (DateCheck >= 0)
                     {
                         dateTime = dateTime.AddYears(1);
@@ -288,33 +310,55 @@ namespace Pocketeer
                     localSettings.Values["WhatDayDoesUserGetMoney"] = Convert.ToString(dateTime.Date);
                 }
                 localSettings.Values["HowOftenDoesUserGetMoney"] = HowOftenDoesUserGetMoneyComboBox.SelectionBoxItem.ToString();
-
                 try
                 {
-                    double HowMuchMoneyDoesUserGetDouble = Convert.ToDouble(HowMuchMoneyDoesUserGetTextBox.Text.ToString());
-                    double HowMuchMoneyDoesUserHaveDouble = Convert.ToDouble(HowMuchMoneyDoesUserHaveTextBox.Text.ToString());
-                    localSettings.Values["HowMuchMoneyDoesUserGet"] = HowMuchMoneyDoesUserGetTextBox.Text.ToString();
-                    localSettings.Values["HowMuchMoneyDoesUserHave"] = HowMuchMoneyDoesUserHaveTextBox.Text.ToString();
+                    localSettings.Values["HowMuchMoneyDoesUserGet"] = Convert.ToString(Convert.ToDouble(HowMuchMoneyDoesUserGetTextBox.Text.ToString()));
+                    localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToString(Convert.ToDouble(HowMuchMoneyDoesUserHaveTextBox.Text.ToString()));
                     localSettings.Values["SetupNeeded"] = "false";
-                    NextButton.Flyout.Hide();
+                    await Task.Delay(250);
                     Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
                 }
-                catch
+                catch (OverflowException)
                 {
+                    NextButton.Flyout.ShowAt(NextButton);
+                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    NextButtonFlyoutTextBlock.Text = "Pocketeer can't handle that much money!";
+                }
+                catch (FormatException)
+                {
+                     NextButton.Flyout.ShowAt(NextButton);
+                }
+            catch
+                {
+                    NextButton.Flyout.ShowAt(NextButton);
+                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    NextButtonFlyoutTextBlock.Text = "An error has occurred, try again";
                 }
             }
             else
             {
                 try
                 {
-                    double HowMuchMoneyDoesUserHaveDouble = Convert.ToDouble(HowMuchMoneyDoesUserHaveTextBox.Text.ToString());
-                    localSettings.Values["HowMuchMoneyDoesUserHave"] = HowMuchMoneyDoesUserHaveTextBox.Text.ToString();
+                    localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToString(Convert.ToDouble(HowMuchMoneyDoesUserHaveTextBox.Text.ToString()));
                     localSettings.Values["DoesUserGetMoney"] = "false";
                     localSettings.Values["SetupNeeded"] = "false";
                     Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
                 }
+                catch (OverflowException)
+                {
+                    NextButton.Flyout.ShowAt(NextButton);
+                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    NextButtonFlyoutTextBlock.Text = "Pocketeer can't handle that much money!";
+                }
+                catch (FormatException)
+                {
+                    NextButton.Flyout.ShowAt(NextButton);
+                }
                 catch
                 {
+                    NextButton.Flyout.ShowAt(NextButton);
+                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    NextButtonFlyoutTextBlock.Text = "An error has occurred, try again";
                 }
             }
         }
@@ -325,16 +369,32 @@ namespace Pocketeer
             {
                 try
                 {
-                    Grid.SetRow(NextButton, 6);
                     Grid.SetRow(HowMuchMoneyDoesUserHaveTextBlock, 5);
                     Grid.SetRow(HowMuchMoneyDoesUserHaveTextBox, 5);
                     NextButton.IsEnabled = false;
+                    if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == -1)
+                    {
+                        WhatDayDoesUserGetMoneyComboBox.Visibility = Visibility.Visible;
+                    }
+                    else if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 0)
+                    {
+                        WhatDayDoesUserGetMoneyComboBox.Visibility = Visibility.Visible;
+                    }
+                    else if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 1)
+                    {
+                        DateThatMoneyGoesIn.Visibility = Visibility.Visible;
+                    }
+                    else if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 2)
+                    {
+                        DateAndMonthThatMoneyGoesIn.Visibility = Visibility.Visible;
+                    }
                     WhatDayDoesUserGetMoneyTextBlock.Visibility = Visibility.Visible;
-                    WhatDayDoesUserGetMoneyComboBox.Visibility = Visibility.Visible;
                     HowOftenDoesUserGetMoneyTextBlock.Visibility = Visibility.Visible;
                     HowOftenDoesUserGetMoneyComboBox.Visibility = Visibility.Visible;
                     HowMuchMoneyDoesUserGetTextBlock.Visibility = Visibility.Visible;
                     HowMuchMoneyDoesUserGetTextBox.Visibility = Visibility.Visible;
+                    Grid.SetRowSpan(HowMuchMoneyDoesUserHaveTextBlock, 1);
+                    Grid.SetRowSpan(HowMuchMoneyDoesUserHaveTextBox, 1);
                     if (WhatDayDoesUserGetMoneyComboBox.SelectedIndex >= 0 && HowOftenDoesUserGetMoneyComboBox.SelectedIndex >= 0 && HowMuchMoneyDoesUserGetTextBox.Text.Length >= 1 && HowMuchMoneyDoesUserHaveTextBox.Text.Length >= 1)
                     {
                         NextButton.IsEnabled = true;
@@ -346,12 +406,28 @@ namespace Pocketeer
             }
             else
             {
-                Grid.SetRow(HowMuchMoneyDoesUserHaveTextBlock, 2);
-                Grid.SetRow(HowMuchMoneyDoesUserHaveTextBox, 2);
-                Grid.SetRow(NextButton, 3);
+                Grid.SetRow(HowMuchMoneyDoesUserHaveTextBlock, 3);
+                Grid.SetRow(HowMuchMoneyDoesUserHaveTextBox, 3);
+                Grid.SetRowSpan(HowMuchMoneyDoesUserHaveTextBlock, 2);
+                Grid.SetRowSpan(HowMuchMoneyDoesUserHaveTextBox, 2);
                 NextButton.IsEnabled = false;
+                if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == -1)
+                {
+                    WhatDayDoesUserGetMoneyComboBox.Visibility = Visibility.Collapsed;
+                }
+                else if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 0)
+                {
+                    WhatDayDoesUserGetMoneyComboBox.Visibility = Visibility.Collapsed;
+                }
+                else if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 1)
+                {
+                    DateThatMoneyGoesIn.Visibility = Visibility.Collapsed;
+                }
+                else if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 2)
+                {
+                    DateAndMonthThatMoneyGoesIn.Visibility = Visibility.Collapsed;
+                }
                 WhatDayDoesUserGetMoneyTextBlock.Visibility = Visibility.Collapsed;
-                WhatDayDoesUserGetMoneyComboBox.Visibility = Visibility.Collapsed;
                 HowOftenDoesUserGetMoneyTextBlock.Visibility = Visibility.Collapsed;
                 HowOftenDoesUserGetMoneyComboBox.Visibility = Visibility.Collapsed;
                 HowMuchMoneyDoesUserGetTextBlock.Visibility = Visibility.Collapsed;
@@ -401,15 +477,16 @@ namespace Pocketeer
 
         private void HowMuchMoneyDoesUserHaveTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (DoesUserGetMoney.IsOn)
-            {
-                DoesSaveButtonNeedToBeEnabled();
-            }
+            DoesSaveButtonNeedToBeEnabled();
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
             NextButton.Flyout.Hide();
+            if (NextButtonFlyoutTextBlockBackup.Length >= 1)
+            {
+                NextButtonFlyoutTextBlock.Text = NextButtonFlyoutTextBlockBackup;
+            }
         }
     }
 }

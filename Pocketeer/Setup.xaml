@@ -14,9 +14,14 @@
         </Grid.RowDefinitions>
         <TextBlock Text="Setup" Padding="20,20,0,0" FontSize="25"/>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1">
-            <TextBlock Text="Hello this is Pocketeer! This will help you track your money." TextAlignment="Center" TextWrapping="WrapWholeWords"/>
-            <TextBlock Padding="0,0,0,20" Text="To get started press the Button below" TextAlignment="Center" TextWrapping="WrapWholeWords"/>
-            <Button Content="Let get started!" Name="NextButton" Click="NextButton_Click" HorizontalAlignment="Center"/>
+            <StackPanel>
+                <TextBlock Name="Test" Text="Hello this is Pocketeer! This will help you track your money." TextAlignment="Center" TextWrapping="WrapWholeWords"/>
+                <TextBlock Padding="0,0,0,20" Text="To get started press the Button below" TextAlignment="Center" TextWrapping="WrapWholeWords"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Get started!" Margin="0,0,10,0" Name="NextButton" Click="NextButton_Click"/>
+                <Button Content="Restore data from backup" Name="GotPMTFileButton" Click="GotPMTFileButton_Click"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>

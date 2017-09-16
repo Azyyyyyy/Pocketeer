@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="Grid" Loading="Grid_Loading">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loading="Grid_Loading" Name="Grid" SizeChanged="Grid_SizeChanged">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -15,7 +15,7 @@
         
         <RelativePanel>
             <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" RelativePanel.RightOf="MySplitViewButton" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True"/>
-            <Button FontSize="22" Style="{ThemeResource AccentButtonStyle}" Width="50" Click="MySplitViewButton_Click" Height="50" Name="MySplitViewButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"/>
+            <Button FontSize="22" Style="{ThemeResource AccentButtonStyle}" Click="MySplitViewButton_Click" Name="MySplitViewButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"/>
             <TextBlock FontSize="20" Name="PageUserIsOn" Text="Infomation" Style="{ThemeResource TitleTextBlockStyle}" RelativePanel.RightOf="MySplitViewButton" Padding="20,0,0,0" RelativePanel.AlignVerticalCenterWith="MySplitViewButton"/> 
         </RelativePanel>
         
@@ -24,14 +24,14 @@
                 <ListBox Name="MySplitViewListBox" SelectionChanged="MySplitViewListBox_SelectionChanged">
                     <ListBoxItem IsSelected="True">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE13D;" FontSize="22" VerticalAlignment="Center"/>
-                            <TextBlock Text="Infomation" FontSize="16" Padding="20,0,0,0"/>
+                            <TextBlock Name="InfomationIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE13D;" FontSize="22" VerticalAlignment="Center"/>
+                            <TextBlock Name="InfomationTextBlock" Text="Infomation" FontSize="16" Padding="20,0,0,0"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="22" VerticalAlignment="Center"/>
-                            <TextBlock Text="Settings" FontSize="16" Padding="20,0,0,0"/>
+                            <TextBlock Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="22" VerticalAlignment="Center"/>
+                            <TextBlock Name="SettingsTextBlock" Text="Settings" FontSize="16" Padding="20,0,0,0"/>
                         </StackPanel>
                     </ListBoxItem>
                 </ListBox>
@@ -40,6 +40,6 @@
                 <Frame Name="FrameForInfoPlusSettings"/>
             </SplitView.Content>
         </SplitView>
-        
+
     </Grid>
 </Page>

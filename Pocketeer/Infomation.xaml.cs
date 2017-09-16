@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,12 +26,12 @@ namespace Pocketeer
 
         static Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         double TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
-        Object MoneyUserGets = localSettings.Values["HowMuchMoneyDoesUserGet"];
         string FlyoutTextBackup = "";
 
         public Infomation()
         {
             this.InitializeComponent();
+            MoneyClass.UpdateTileNotifications();
         }
 
         private void AddMoneyButton_Click(object sender, RoutedEventArgs e)
@@ -44,13 +45,18 @@ namespace Pocketeer
             {
                 try
                 {
-                    if (Convert.ToDouble(AddMoneyTextBox.Text.ToString()) == 0)
+                    string money = AddMoneyTextBox.Text;
+                    string pattern = "£";
+                    string replacement = "";
+                    Regex rgx = new Regex(pattern);
+                    money = rgx.Replace(money, replacement);
+                    if (Convert.ToDouble(money) == 0)
                     {
                         TextForAddOkButtonFlyout.Text = "You can't add no money!";
                     }
                     else
                     {
-                        localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToDouble(TotalMoney.ToString()) + Convert.ToDouble(AddMoneyTextBox.Text.ToString());
+                        localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToDouble(TotalMoney.ToString()) + Convert.ToDouble(money.ToString());
                         TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
                         TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString("0.00")}";
                         AddMoneyTextBox.Text = "";
@@ -61,8 +67,16 @@ namespace Pocketeer
                         }
                     }
                 }
+                catch (OverflowException)
+                {
+                    TextForAddOkButtonFlyout.Text = "You can't add that much money in Pocketeer!";
+                }
+                catch (FormatException)
+                {
+                }
                 catch
                 {
+                    TextForAddOkButtonFlyout.Text = "An error has occurred, try again";
                 }
             }
         }
@@ -79,17 +93,22 @@ namespace Pocketeer
             {
                 try
                 {
-                    if (Convert.ToDouble(RemoveMoneyTextBox.Text.ToString()) == 0)
+                    string money = RemoveMoneyTextBox.Text;
+                    string pattern = "£";
+                    string replacement = "";
+                    Regex rgx = new Regex(pattern);
+                    money = rgx.Replace(money, replacement);
+                    if (Convert.ToDouble(money) == 0)
                     {
                         TextForRemoveOkButtonFlyout.Text = "You can't remove no money!";
                     }
-                    else if (Convert.ToDouble(RemoveMoneyTextBox.Text.ToString()) > TotalMoneyDouble)
+                    else if (Convert.ToDouble(money) > TotalMoneyDouble)
                     {
                         TextForRemoveOkButtonFlyout.Text = "You can't remove more then you got!";
                     }
                     else
                     {
-                        TotalMoneyDouble = Convert.ToDouble(TotalMoney.ToString()) - Convert.ToDouble(RemoveMoneyTextBox.Text.ToString());
+                        TotalMoneyDouble = Convert.ToDouble(TotalMoney.ToString()) - Convert.ToDouble(money.ToString());
                         localSettings.Values["HowMuchMoneyDoesUserHave"] = TotalMoneyDouble;
                         TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
                         TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString("0.00")}";
@@ -101,26 +120,27 @@ namespace Pocketeer
                         }
                     }
                 }
+                catch (OverflowException)
+                {
+                    TextForAddOkButtonFlyout.Text = "You can't remove that much money in Pocketeer!";
+                }
+                catch (FormatException)
+                {
+                }
                 catch
                 {
+                    TextForAddOkButtonFlyout.Text = "An error has occurred, try again";
                 }
             }
         }
 
         private void grid_Loading(FrameworkElement sender, object args)
         {
-            MoneyClass.UpdateTotalMoneyAndWhenMoneyNeedsGoingInNext();
+            MoneyClass.UpdateTotalMoneyAndWhenMoneyNeedsGoingInNext(false);
 
+            Object MoneyUserGets = localSettings.Values["HowMuchMoneyDoesUserGet"];
             TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
             Object DateMoneyIsAddedToTotal = localSettings.Values["WhatDayDoesUserGetMoney"];
-            DateTime DateMoneyIsAddedToTotalDateTime = DateTime.Now;
-            try
-            {
-                DateMoneyIsAddedToTotalDateTime = Convert.ToDateTime(localSettings.Values["WhatDayDoesUserGetMoney"]);
-            }
-            catch
-            {
-            }
 
             if (TotalMoney.ToString() == "0")
             {
@@ -141,18 +161,47 @@ namespace Pocketeer
             }
             else
             {
-                HowMuchMoneyUserGetsTextBlock.Text = $"You get £{MoneyUserGets.ToString()}";
-
+                HowMuchMoneyUserGetsTextBlock.Text = $"You get £{Convert.ToDouble(MoneyUserGets).ToString("0.00")}";
                 if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Week")
                 {
                     WhatDayMoneyTextBlock.Text = $"You get your money on {DateMoneyIsAddedToTotal.ToString()}";
                 }
                 else
                 {
+                    DateTime DateMoneyIsAddedToTotalDateTime = DateTime.Now;
+                    DateMoneyIsAddedToTotalDateTime = Convert.ToDateTime(localSettings.Values["WhatDayDoesUserGetMoney"]);
                     WhatDayMoneyTextBlock.Text = $"You get your money on {DateMoneyIsAddedToTotalDateTime.ToString("dd/MM/yy")}";
                 }
-                WhenDayMoneyGetsAddedTextBlock.Text = $"That is in {elapsedint} days";
+                if (elapsedint >= 7)
+                {
+                    string weeks = "week";
+                    string days = "day";
+                    double week;
+                    week = elapsedint / 7;
+                    int day = elapsedint - ((int)week * 7);
+                    if (week >= 2)
+                    {
+                        weeks = weeks + "s";
+                    }
+                    if (day >= 2)
+                    {
+                        days = days + "s";
+                    }
+                    if (day <= 0)
+                    {
+                        WhenDayMoneyGetsAddedTextBlock.Text = $"That is in {week} {weeks}";
+                    }
+                    else
+                    {
+                        WhenDayMoneyGetsAddedTextBlock.Text = $"That is in {week} {weeks} and {day} {days}";
+                    }
+                }
+                else if (elapsedint <= 7)
+                {
+                    WhenDayMoneyGetsAddedTextBlock.Text = $"That is this {NextTimeMoneyNeedsToBeAdded.DayOfWeek}!";
+                }
             }
+            MoneyClass.UpdateTileNotifications();
         }
 
         private void RemoveOkButton_Click(object sender, RoutedEventArgs e)
@@ -165,6 +214,26 @@ namespace Pocketeer
         {
             TextForAddOkButtonFlyout.Text = FlyoutTextBackup;
             AddMoneyButton.Flyout.Hide();
+        }
+
+        private void grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Window.Current.Bounds.Height <= 350 || Window.Current.Bounds.Width <= 460)
+            {
+                int fontsize = 20;
+                TotalMoneyTextBlock.FontSize = fontsize;
+                HowMuchMoneyUserGetsTextBlock.FontSize = fontsize;
+                WhatDayMoneyTextBlock.FontSize = fontsize;
+                WhenDayMoneyGetsAddedTextBlock.FontSize = fontsize;
+            }
+            else
+            {
+                int fontsize = 26;
+                TotalMoneyTextBlock.FontSize = fontsize;
+                HowMuchMoneyUserGetsTextBlock.FontSize = fontsize;
+                WhatDayMoneyTextBlock.FontSize = fontsize;
+                WhenDayMoneyGetsAddedTextBlock.FontSize = fontsize;
+            }
         }
     }
 }

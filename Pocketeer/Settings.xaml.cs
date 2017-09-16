@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -28,10 +29,30 @@ namespace Pocketeer
     public sealed partial class Settings : Page
     {
         Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        Random random = new Random();
 
         public Settings()
         {
             this.InitializeComponent();
+            UISettings uISettings = new UISettings();
+        }
+
+        void ResetData()
+        {
+            localSettings.Values["DoesUserGetMoney"] = null;
+            localSettings.Values["WhatDayDoesUserGetMoney"] = null;
+            localSettings.Values["HowOftenDoesUserGetMoney"] = null;
+            localSettings.Values["HowMuchMoneyDoesUserGet"] = null;
+            localSettings.Values["HowMuchMoneyDoesUserHave"] = null;
+            localSettings.Values["WhenMoneyNeedsGoingIn"] = null;
+            localSettings.Values["SetupNeeded"] = null;
+            var newWindow = Window.Current;
+            var newAppView = ApplicationView.GetForCurrentView();
+            var frame = new Frame();
+            frame.Navigate(typeof(MainPage), null);
+            newWindow.Content = frame;
+            ResetDataButton.Flyout.Hide();
+            newWindow.Activate();
         }
 
         BitmapImage White = new BitmapImage(new Uri("ms-appx:///Assets/white-icon.png"));
@@ -41,33 +62,40 @@ namespace Pocketeer
 
         private void grid_Loading(FrameworkElement sender, object args)
         {
+            if (random.Next(100) >= 90)
+            {
+                if (random.Next(100) <= 50)
+                {
+                    InfomationTextBlock.Text = "Savings account for dummies - Discord server i'm in";
+                }
+                else
+                {
+                    InfomationTextBlock.Text = "Respect the setup screen - Dylan 2017";
+                }
+            }
             Object RequestedThemeInfo = localSettings.Values["RequestedTheme"];
-            var AppTheme = App.Current.RequestedTheme.ToString();
-            if (RequestedThemeInfo.ToString() == "Dark")
+            var IsThemeDark = App.Current.RequestedTheme == ApplicationTheme.Dark;
+            if (IsThemeDark)
             {
                 AppIcon.Source = White;
                 GithubIcon.Source = White_Github;
+            }
+            else
+            {
+                AppIcon.Source = Black;
+                GithubIcon.Source = Black_Github;
+            }
+            if (RequestedThemeInfo == null || RequestedThemeInfo.ToString() == "FromUsersSettings")
+            {
+                UseSystemThemeRadioButton.IsChecked = true;
+            }
+            else if (RequestedThemeInfo.ToString() == "Dark")
+            {
                 DarkRadioButton.IsChecked = true;
             }
             else if (RequestedThemeInfo.ToString() == "Light")
             {
-                AppIcon.Source = Black;
-                GithubIcon.Source = Black_Github;
                 LightRadioButton.IsChecked = true;
-            }
-            else if (RequestedThemeInfo.ToString() == "FromUsersSettings")
-            {
-                if (AppTheme == "Light")
-                {
-                    AppIcon.Source = Black;
-                    GithubIcon.Source = Black_Github;
-                }
-                else
-                {
-                    AppIcon.Source = White;
-                    GithubIcon.Source = White_Github;
-                }
-                UseSystemThemeRadioButton.IsChecked = true;
             }
 
             Package package = Package.Current;
@@ -82,6 +110,7 @@ namespace Pocketeer
             if (UseSystemThemeRadioButton.IsChecked == true)
             {
                 localSettings.Values["RequestedTheme"] = "FromUsersSettings";
+                apprestarttextblock.Visibility = Visibility.Visible;
             }
         }
 
@@ -90,6 +119,7 @@ namespace Pocketeer
             if (DarkRadioButton.IsChecked == true)
             {
                 localSettings.Values["RequestedTheme"] = "Dark";
+                apprestarttextblock.Visibility = Visibility.Visible;
             }
         }
 
@@ -98,20 +128,34 @@ namespace Pocketeer
             if (LightRadioButton.IsChecked == true)
             {
                 localSettings.Values["RequestedTheme"] = "Light";
+                apprestarttextblock.Visibility = Visibility.Visible;
             }
         }
 
-        private async void ResetDataButton_Click(object sender, RoutedEventArgs e)
+        private async void YesButton_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Delay(1000 * 5);
-            localSettings.Values["DoesUserGetMoney"] = null;
-            localSettings.Values["WhatDayDoesUserGetMoney"] = null;
-            localSettings.Values["HowOftenDoesUserGetMoney"] = null;
-            localSettings.Values["HowMuchMoneyDoesUserGet"] = null;
-            localSettings.Values["HowMuchMoneyDoesUserHave"] = null;
-            localSettings.Values["SetupNeeded"] = null;
+            await MoneyClass.MakeBackupFile();
+            ResetData();
+        }
 
-            Application.Current.Exit();
+        private void NoButton_Click(object sender, RoutedEventArgs e)
+        {
+            ResetData();
+        }
+
+        private async void RestoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            await MoneyClass.Restore();
+        }
+
+        private async void BackupButton_Click(object sender, RoutedEventArgs e)
+        {
+            await MoneyClass.MakeBackupFile();
+        }
+
+        private void ResetDataButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

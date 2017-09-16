@@ -22,6 +22,8 @@ namespace Pocketeer
     /// </summary>
     sealed partial class App : Application
     {
+        Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -30,6 +32,18 @@ namespace Pocketeer
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            Object RequestedThemeInfo = localSettings.Values["RequestedTheme"];
+            if (RequestedThemeInfo == null)
+            {
+            }
+            else if (RequestedThemeInfo.ToString() == "Dark")
+            {
+                this.RequestedTheme = ApplicationTheme.Dark;
+            }
+            else if (RequestedThemeInfo.ToString() == "Light")
+            {
+                this.RequestedTheme = ApplicationTheme.Light;
+            }
         }
 
         /// <summary>

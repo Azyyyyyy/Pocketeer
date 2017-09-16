@@ -19,8 +19,8 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
         </Grid.ColumnDefinitions>
         <TextBlock Text="Setup" Padding="20,20,0,0" FontSize="25"/>
 
@@ -49,16 +49,16 @@
         <DatePicker Name="DateAndMonthThatMoneyGoesIn" YearVisible="False" Grid.Row="3" Grid.Column="1" Visibility="Collapsed"/>
         
         <TextBlock Name="HowMuchMoneyDoesUserGetTextBlock" Text="How much money do you get?" Padding="10,0,10,0" VerticalAlignment="Center" Grid.Row="4" />
-        <TextBox Name="HowMuchMoneyDoesUserGetTextBox" PlaceholderText="Input it in as 1.00 not £1.00" TextChanged="HowMuchMoneyDoesUserGetTextBox_TextChanged" Grid.Row="4" Grid.Column="1" Height="10" />
+        <TextBox Name="HowMuchMoneyDoesUserGetTextBox" PlaceholderText="Input money" TextChanged="HowMuchMoneyDoesUserGetTextBox_TextChanged" Grid.Row="4" Grid.Column="1" Height="10" />
 
         <TextBlock Name="HowMuchMoneyDoesUserHaveTextBlock" Text="How much money do you have?" Padding="10,0,10,0" VerticalAlignment="Center" Grid.Row="5" />
-        <TextBox Name="HowMuchMoneyDoesUserHaveTextBox" PlaceholderText="Input it in as 1.00 not £1.00" TextChanged="HowMuchMoneyDoesUserHaveTextBox_TextChanged" Grid.Row="5" Grid.Column="1" Height="10" VerticalAlignment="Center" />
+        <TextBox Name="HowMuchMoneyDoesUserHaveTextBox" PlaceholderText="Input money" TextChanged="HowMuchMoneyDoesUserHaveTextBox_TextChanged" Grid.Row="5" Grid.Column="1" Height="10" VerticalAlignment="Center" />
 
         <Button Name="NextButton" IsEnabled="False" Click="NextButton_Click" Content="Save" Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="3" >
             <Button.Flyout>
                 <Flyout>
                     <StackPanel>
-                        <TextBlock Text="Put money in as 1.00 not £1.00" Padding="0,0,0,5"/>
+                        <TextBlock Name="NextButtonFlyoutTextBlock" TextWrapping="WrapWholeWords" Text="Put money in as 1.00 not £1.00" Padding="0,0,0,5"/>
                         <Button Name="OkButton" Click="OkButton_Click" Content="Ok"/>
                     </StackPanel>
                 </Flyout>

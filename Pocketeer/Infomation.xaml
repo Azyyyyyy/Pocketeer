@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="grid" Loading="grid_Loading">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="grid" Loading="grid_Loading" SizeChanged="grid_SizeChanged">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>

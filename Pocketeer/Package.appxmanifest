@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="2b800e47-1bb2-45ee-9619-addc2d2db9f9" Publisher="CN=DMP9Labs" Version="0.1.0.0" />
-  <mp:PhoneIdentity PhoneProductId="2b800e47-1bb2-45ee-9619-addc2d2db9f9" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="63951Ultz.Pocketeer" Publisher="CN=A21F5AD9-31F3-43CE-836F-ACBE1DE6012F" Version="1.1.2.0" />
+  <mp:PhoneIdentity PhoneProductId="8a68bf14-1c6d-426c-8751-134b5180aa08" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Pocketeer</DisplayName>
-    <PublisherDisplayName>DMP9Labs</PublisherDisplayName>
+    <PublisherDisplayName>Ultz</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>

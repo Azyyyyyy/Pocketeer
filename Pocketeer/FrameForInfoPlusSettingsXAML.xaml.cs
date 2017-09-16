@@ -28,22 +28,8 @@ namespace Pocketeer
         public FrameForInfoPlusSettingsXAML()
         {
             this.InitializeComponent();
-        }
-
-        private void Grid_Loading(FrameworkElement sender, object args)
-        {
-            Object RequestedThemeInfo = localSettings.Values["RequestedTheme"];
-            if (RequestedThemeInfo == null)
-            {
-            }
-            else if (RequestedThemeInfo.ToString() == "Dark")
-            {
-                RequestedTheme = ElementTheme.Dark;
-            }
-            else if (RequestedThemeInfo.ToString() == "Light")
-            {
-                RequestedTheme = ElementTheme.Light;
-            }
+            MySplitViewButton.Height = 50;
+            MySplitViewButton.Width = 50;
         }
 
         private void MySplitViewButton_Click(object sender, RoutedEventArgs e)
@@ -55,7 +41,7 @@ namespace Pocketeer
         {
             if (MySplitViewListBox.SelectedIndex == 0)
             {
-                if (FrameForInfoPlusSettings == null)
+                if (FrameForInfoPlusSettings == null || localSettings.Values["LastTimeAppWasOpened"] == null)
                 {
                     await Task.Delay(TimeSpan.FromSeconds(0.25));
                 }
@@ -67,6 +53,47 @@ namespace Pocketeer
                 PageUserIsOn.Text = "Settings";
                 FrameForInfoPlusSettings.Navigate(typeof(Settings));
             }
+        }
+
+        private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Window.Current.Bounds.Height <= 350 || Window.Current.Bounds.Width <= 460)
+            {
+                int fontsize = 16;
+                MySplitViewButton.FontSize = fontsize + 2;
+                PageUserIsOn.FontSize = fontsize;
+                InfomationIcon.FontSize = fontsize + 2;
+                InfomationTextBlock.FontSize = fontsize - 4;
+                InfomationTextBlock.Padding = new Thickness(16,0,0,0);
+                SettingsIcon.FontSize = fontsize + 2;
+                SettingsTextBlock.FontSize = fontsize - 4;
+                SettingsTextBlock.Padding = new Thickness(16, 0, 0, 0);
+                MySplitViewButton.Height = 46;
+                MySplitViewButton.Width = 46;
+                MySplitView.CompactPaneLength = 46;
+                MySplitView.OpenPaneLength = 130;
+            }
+            else
+            {
+                int fontsize = 20;
+                MySplitViewButton.FontSize = fontsize + 2;
+                PageUserIsOn.FontSize = fontsize;
+                InfomationIcon.FontSize = fontsize + 2;
+                InfomationTextBlock.FontSize = fontsize - 4;
+                InfomationTextBlock.Padding = new Thickness(20, 0, 0, 0);
+                SettingsIcon.FontSize = fontsize + 2;
+                SettingsTextBlock.FontSize = fontsize - 4;
+                SettingsTextBlock.Padding = new Thickness(20, 0, 0, 0);
+                MySplitViewButton.Height = 50;
+                MySplitViewButton.Width = 50;
+                MySplitView.CompactPaneLength = 50;
+                MySplitView.OpenPaneLength = 150;
+            }
+        }
+
+        private void Grid_Loading(FrameworkElement sender, object args)
+        {
+
         }
     }
 }

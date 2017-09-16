@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -32,6 +34,19 @@ namespace Pocketeer
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(SetupPart2));
+        }
+
+        private async void GotPMTFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            await MoneyClass.Restore();
+            if (localSettings.Values["SetupNeeded"] == null)
+            {
+            }
+            else if (localSettings.Values["SetupNeeded"].ToString() == "false")
+            {
+                MoneyClass.UpdateTotalMoneyAndWhenMoneyNeedsGoingInNext(true);
+                Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
+            }
         }
     }
 }
