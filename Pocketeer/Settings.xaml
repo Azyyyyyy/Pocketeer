@@ -8,12 +8,13 @@
     mc:Ignorable="d"
     >
 
-    <Grid Padding="20,0,0,0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="grid" Loading="grid_Loading">
-        
+    <Grid Padding="20,0,0,0" SizeChanged="grid_SizeChanged" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="grid" Loading="grid_Loading">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
         <ScrollViewer Grid.RowSpan="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" HorizontalScrollMode="Disabled">
             <StackPanel>
@@ -45,15 +46,19 @@
                         <Image Source="github(black)-icon.png" VerticalAlignment="Center" Name="GithubIcon" Width="25" Height="25"/>
                         <HyperlinkButton Padding="20,0,0,0" VerticalAlignment="Center" NavigateUri="http://www.github.com/DMP9Labs/Pocketeer" Content="Click this to see what makes me tick!"/>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" Padding="0,10,0,0">
+                        <Image Source="Discord-Logo-Black.png" VerticalAlignment="Center" Name="DiscordIcon" Width="25" Height="25"/>
+                        <HyperlinkButton Padding="20,0,0,0" VerticalAlignment="Center" NavigateUri="http://www.discord.gg/E2Fyg5a" Content="Join our discord server!"/>
+                    </StackPanel>
                     <TextBlock Height="20"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" VerticalAlignment="Top" Orientation="Vertical">
-                    <Button Name="ResetDataButton" Click="ResetDataButton_Click" Content="Reset data">
+                    <Button Name="ResetDataButton" Margin="0,0,0,5" Content="Reset data">
                         <Button.Flyout>
                             <Flyout Placement="Top" LightDismissOverlayMode="On" AllowFocusOnInteraction="True">
                                 <StackPanel HorizontalAlignment="Stretch">
-                                    <TextBlock TextWrapping="WrapWholeWords" Margin="0,0,0,5" Text="Do you what to backup your data before doing this?"/>
+                                    <TextBlock TextWrapping="WrapWholeWords" Margin="0,0,0,5" Text="Do you want to backup your data before doing this?"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                                         <Button Content="Yes" Name="YesButton" Click="YesButton_Click" Margin="10,0,10,0" HorizontalAlignment="Left"/>
                                         <Button Content="No" Name="NoButton" Click="NoButton_Click" HorizontalAlignment="Right"/>
@@ -63,13 +68,25 @@
                         </Button.Flyout>
                     </Button>
                     <StackPanel Orientation="Horizontal">
-                        <Button Margin="0,5,5,0" Content="Make a backup" Name="BackupButton" Click="BackupButton_Click"/>
-                        <Button VerticalAlignment="Bottom" Content="Restore from a backup" Name="RestoreButton" Click="RestoreButton_Click"/>
+                        <Button Margin="0,0,5,0" Content="Make a backup" Name="BackupButton" Click="BackupButton_Click"/>
+                        <Button Content="Restore from a backup" Name="RestoreButton" Click="RestoreButton_Click"/>
                     </StackPanel>
-                    <TextBlock Height="10"/>
+                    <Button Margin="0,5,0,5" Content="Remove Ads" Name="RemoveAdsButton" Click="RemoveAdsButton_Click"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock VerticalAlignment="Center" Text="Currency: " Margin="0,0,5,0"/>
+                        <ComboBox Margin="0,0,0,0" x:Name="CurrencyChoose" SelectionChanged="CurrencyChoose_SelectionChanged">
+                            <ComboBoxItem Content="$"/>
+                            <ComboBoxItem Content="£"/>
+                            <ComboBoxItem Content="zł"/>
+                            <ComboBoxItem Content="¥"/>
+                            <ComboBoxItem Content="₹"/>
+                            <ComboBoxItem Content="R$"/>
+                            <ComboBoxItem Content="€"/>
+                        </ComboBox>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
-        <TextBlock Grid.RowSpan="3" Text=" {AppVersion}" Name="AppVersionTextBlock" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <TextBlock Grid.RowSpan="4" Margin="0,0,20,0" Text=" {AppVersion}" Name="AppVersionTextBlock" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
     </Grid>
 </Page>

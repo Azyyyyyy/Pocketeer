@@ -9,10 +9,10 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="MainGrid" Loading="MainGrid_Loading">
         <Grid.RowDefinitions>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Rectangle Fill="Gray"/>
+        <Rectangle Height="32" Name="NavBar" Fill="Gray"/>
         <TextBlock Text="Pocketeer" Name="AppName" Padding="8,8,0,0" FontSize="12" Foreground="White"/>
         <Frame Name="OtherUI" Grid.Row="1"/>
     </Grid>

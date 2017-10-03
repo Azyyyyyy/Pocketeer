@@ -5,8 +5,10 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Services.Store;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -30,20 +32,27 @@ namespace Pocketeer
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
+            Suspending += OnSuspending;
             Object RequestedThemeInfo = localSettings.Values["RequestedTheme"];
             if (RequestedThemeInfo == null)
             {
             }
             else if (RequestedThemeInfo.ToString() == "Dark")
             {
-                this.RequestedTheme = ApplicationTheme.Dark;
+                RequestedTheme = ApplicationTheme.Dark;
             }
             else if (RequestedThemeInfo.ToString() == "Light")
             {
-                this.RequestedTheme = ApplicationTheme.Light;
+                RequestedTheme = ApplicationTheme.Light;
             }
+            MoneyClass.currencysymbols.Add("$");
+            MoneyClass.currencysymbols.Add("£");
+            MoneyClass.currencysymbols.Add("zł");
+            MoneyClass.currencysymbols.Add("¥");
+            MoneyClass.currencysymbols.Add("₹");
+            MoneyClass.currencysymbols.Add("R$");
+            MoneyClass.currencysymbols.Add("€");
         }
 
         /// <summary>
@@ -106,6 +115,7 @@ namespace Pocketeer
         /// <param name="e">Details about the suspend request.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            localSettings.Values["AdShown"] = "false";
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();

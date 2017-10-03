@@ -13,6 +13,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Advertising.WinRT.UI;
+using Windows.Services.Store;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,15 +26,59 @@ namespace Pocketeer
     /// </summary>
     public sealed partial class Infomation : Page
     {
-
         static Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         double TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
         string FlyoutTextBackup = "";
+        InterstitialAd myInterstitialAd = null;
+#if DEBUG
+        string myAppId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
+        string myAdUnitId = "test";
+#endif
+#if !DEBUG
+        string myAppId = "9n3h90r55cr1";
+        string myAdUnitId = "11700722";
+#endif
 
         public Infomation()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             MoneyClass.UpdateTileNotifications();
+            myInterstitialAd = new InterstitialAd();
+            myInterstitialAd.AdReady += MyInterstitialAd_AdReady;
+            myInterstitialAd.ErrorOccurred += MyInterstitialAd_ErrorOccurred;
+            myInterstitialAd.Completed += MyInterstitialAd_Completed;
+            myInterstitialAd.Cancelled += MyInterstitialAd_Cancelled;
+        }
+
+        void ChangeAmountOfMoneyUI()
+        {
+            if (localSettings.Values["Currency"] == null)
+            {
+                TotalMoneyTextBlock.Text = $"You got £{TotalMoney.ToString("0.00")}";
+            }
+            else
+            {
+                string currency = MoneyClass.currencysymbols[Convert.ToInt32(localSettings.Values["Currency"])];
+                TotalMoneyTextBlock.Text = $"You got {currency}{TotalMoney.ToString("0.00")}";
+            }
+        }
+
+        private void MyInterstitialAd_Cancelled(object sender, object e)
+        {
+        }
+
+        private void MyInterstitialAd_Completed(object sender, object e)
+        {
+            localSettings.Values["AdShown"] = "true";
+        }
+
+        private void MyInterstitialAd_ErrorOccurred(object sender, AdErrorEventArgs e)
+        {
+        }
+
+        private void MyInterstitialAd_AdReady(object sender, object e)
+        {
+            myInterstitialAd.Show();
         }
 
         private void AddMoneyButton_Click(object sender, RoutedEventArgs e)
@@ -46,7 +93,7 @@ namespace Pocketeer
                 try
                 {
                     string money = AddMoneyTextBox.Text;
-                    string pattern = "£";
+                    string pattern = @"\p{Sc}";
                     string replacement = "";
                     Regex rgx = new Regex(pattern);
                     money = rgx.Replace(money, replacement);
@@ -58,7 +105,7 @@ namespace Pocketeer
                     {
                         localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToDouble(TotalMoney.ToString()) + Convert.ToDouble(money.ToString());
                         TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
-                        TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString("0.00")}";
+                        ChangeAmountOfMoneyUI();
                         AddMoneyTextBox.Text = "";
                         AddMoneyToTotalButton.Flyout.Hide();
                         if (!RemoveMoneyToTotalButton.IsEnabled)
@@ -81,6 +128,7 @@ namespace Pocketeer
             }
         }
 
+
         private void RemoveMoneyButton_Click(object sender, RoutedEventArgs e)
         {
             FlyoutTextBackup = TextForRemoveOkButtonFlyout.Text;
@@ -94,7 +142,7 @@ namespace Pocketeer
                 try
                 {
                     string money = RemoveMoneyTextBox.Text;
-                    string pattern = "£";
+                    string pattern = @"\p{Sc}";
                     string replacement = "";
                     Regex rgx = new Regex(pattern);
                     money = rgx.Replace(money, replacement);
@@ -111,7 +159,7 @@ namespace Pocketeer
                         TotalMoneyDouble = Convert.ToDouble(TotalMoney.ToString()) - Convert.ToDouble(money.ToString());
                         localSettings.Values["HowMuchMoneyDoesUserHave"] = TotalMoneyDouble;
                         TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
-                        TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString("0.00")}";
+                        ChangeAmountOfMoneyUI();
                         RemoveMoneyTextBox.Text = "";
                         RemoveMoneyToTotalButton.Flyout.Hide();
                         if (TotalMoneyDouble == 0)
@@ -134,8 +182,18 @@ namespace Pocketeer
             }
         }
 
-        private void grid_Loading(FrameworkElement sender, object args)
+        private async void grid_Loading(FrameworkElement sender, object args)
         {
+            StoreContext context = StoreContext.GetDefault();
+            StoreAppLicense appLicense = await context.GetAppLicenseAsync();
+            foreach (KeyValuePair<string, StoreLicense> item in appLicense.AddOnLicenses)
+            {
+                StoreLicense addOnLicense = item.Value;
+                if (addOnLicense.InAppOfferToken == "RemoveAdvertsInPocketeer")
+                {
+                    MoneyClass.ShowAds = !addOnLicense.IsActive;
+                }
+            }
             MoneyClass.UpdateTotalMoneyAndWhenMoneyNeedsGoingInNext(false);
 
             Object MoneyUserGets = localSettings.Values["HowMuchMoneyDoesUserGet"];
@@ -151,7 +209,7 @@ namespace Pocketeer
             TimeSpan elapsed = DateTime.Now.Date.Subtract(NextTimeMoneyNeedsToBeAdded.Date);
             int elapsedint = Convert.ToInt32(-elapsed.TotalDays);
 
-            TotalMoneyTextBlock.Text = $"You have got £{TotalMoney.ToString("0.00")}";
+            ChangeAmountOfMoneyUI();
             if (MoneyUserGets == null)
             {
                 HowMuchMoneyUserGetsTextBlock.Visibility = Visibility.Collapsed;
@@ -161,17 +219,18 @@ namespace Pocketeer
             }
             else
             {
-                HowMuchMoneyUserGetsTextBlock.Text = $"You get £{Convert.ToDouble(MoneyUserGets).ToString("0.00")}";
-                if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Week")
+                if (localSettings.Values["Currency"] == null)
                 {
-                    WhatDayMoneyTextBlock.Text = $"You get your money on {DateMoneyIsAddedToTotal.ToString()}";
+                    HowMuchMoneyUserGetsTextBlock.Text = $"You get £{Convert.ToDouble(MoneyUserGets).ToString("0.00")}";
                 }
                 else
                 {
-                    DateTime DateMoneyIsAddedToTotalDateTime = DateTime.Now;
-                    DateMoneyIsAddedToTotalDateTime = Convert.ToDateTime(localSettings.Values["WhatDayDoesUserGetMoney"]);
-                    WhatDayMoneyTextBlock.Text = $"You get your money on {DateMoneyIsAddedToTotalDateTime.ToString("dd/MM/yy")}";
+                    string currency = MoneyClass.currencysymbols[Convert.ToInt32(localSettings.Values["Currency"])];
+                    HowMuchMoneyUserGetsTextBlock.Text = $"You get {currency}{Convert.ToDouble(MoneyUserGets).ToString("0.00")}";
                 }
+                DateTime DateMoneyIsAddedToTotalDateTime = DateTime.Now;
+                DateMoneyIsAddedToTotalDateTime = Convert.ToDateTime(localSettings.Values["WhatDayDoesUserGetMoney"]);
+                WhatDayMoneyTextBlock.Text = $"You get your money on {DateMoneyIsAddedToTotalDateTime.ToString("dd/MM/yy")}";
                 if (elapsedint >= 7)
                 {
                     string weeks = "week";
@@ -202,6 +261,26 @@ namespace Pocketeer
                 }
             }
             MoneyClass.UpdateTileNotifications();
+            if (MoneyClass.ShowAds)
+            {
+                if (localSettings.Values["AdShown"] == null || localSettings.Values["AdShown"].ToString() == "false")
+                {
+                    myInterstitialAd.RequestAd(AdType.Display, myAppId, myAdUnitId);
+                }
+            }
+
+            while (true)
+            {
+                await Task.Delay(1000 * 60);
+                if (MoneyClass.ShowAds)
+                {
+                    myInterstitialAd.RequestAd(AdType.Display, myAppId, myAdUnitId);
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
 
         private void RemoveOkButton_Click(object sender, RoutedEventArgs e)

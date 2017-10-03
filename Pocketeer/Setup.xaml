@@ -5,7 +5,8 @@
     xmlns:local="using:Pocketeer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    >
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -14,13 +15,22 @@
         </Grid.RowDefinitions>
         <TextBlock Text="Setup" Padding="20,20,0,0" FontSize="25"/>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1">
-            <StackPanel>
-                <TextBlock Name="Test" Text="Hello this is Pocketeer! This will help you track your money." TextAlignment="Center" TextWrapping="WrapWholeWords"/>
-                <TextBlock Padding="0,0,0,20" Text="To get started press the Button below" TextAlignment="Center" TextWrapping="WrapWholeWords"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Get started!" Margin="0,0,10,0" Name="NextButton" Click="NextButton_Click"/>
-                <Button Content="Restore data from backup" Name="GotPMTFileButton" Click="GotPMTFileButton_Click"/>
+            <TextBlock Padding="10,0,10,10" Text="Thank you for downloading Pocketeer! Let start tracking your money, the easy way!" TextAlignment="Center" TextWrapping="WrapWholeWords"/>
+            <StackPanel Name="buttonstackpanel" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Let get started!" Name="NextButton" Click="NextButton_Click"/>
+                <Button VerticalAlignment="Bottom" Margin="10,0,10,0" Content="Restore data from backup" Name="GotPMTFileButton" Click="GotPMTFileButton_Click"/>
+                <StackPanel>
+                    <TextBlock Text="Currency:" Margin="5,0,0,5" HorizontalAlignment="Center"/>
+                    <ComboBox Margin="5,0,0,0" HorizontalAlignment="Center" Name="CurrencyChoose" SelectionChanged="CurrencyChoose_SelectionChanged">
+                        <ComboBoxItem Content="$"/>
+                        <ComboBoxItem Content="£"/>
+                        <ComboBoxItem Content="zł"/>
+                        <ComboBoxItem Content="¥"/>
+                        <ComboBoxItem Content="₹"/>
+                        <ComboBoxItem Content="R$"/>
+                        <ComboBoxItem Content="€"/>
+                    </ComboBox>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

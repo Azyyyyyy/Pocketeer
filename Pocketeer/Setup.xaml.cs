@@ -29,6 +29,13 @@ namespace Pocketeer
         public Setup()
         {
             this.InitializeComponent();
+            if (localSettings.Values["Currency"] == null)
+            {
+            }
+            else
+            {
+                CurrencyChoose.SelectedIndex = Convert.ToInt32(localSettings.Values["Currency"].ToString());
+            }
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -47,6 +54,11 @@ namespace Pocketeer
                 MoneyClass.UpdateTotalMoneyAndWhenMoneyNeedsGoingInNext(true);
                 Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
             }
+        }
+
+        private void CurrencyChoose_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            localSettings.Values["Currency"] = CurrencyChoose.SelectedIndex;
         }
     }
 }

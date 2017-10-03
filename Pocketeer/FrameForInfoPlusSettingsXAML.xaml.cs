@@ -6,6 +6,9 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
+using Windows.Services.Store;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -24,17 +27,38 @@ namespace Pocketeer
     public sealed partial class FrameForInfoPlusSettingsXAML : Page
     {
         Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        int CompactPaneLength = 50;
 
         public FrameForInfoPlusSettingsXAML()
         {
-            this.InitializeComponent();
-            MySplitViewButton.Height = 50;
-            MySplitViewButton.Width = 50;
+            InitializeComponent();
+            MySplitView.CompactPaneLength = CompactPaneLength;
         }
 
         private void MySplitViewButton_Click(object sender, RoutedEventArgs e)
         {
             MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
+        }
+
+        void ChangeUISizing(int fontsize, Thickness thickness, int buttonsize, int openpanelength)
+        {
+            MySplitViewButton.FontSize = fontsize + 2;
+            PageUserIsOn.FontSize = fontsize;
+            InfomationIcon.FontSize = fontsize + 2;
+            InfomationTextBlock.FontSize = fontsize - 4;
+            InfomationTextBlock.Padding = thickness;
+            SettingsIcon.FontSize = fontsize + 2;
+            SettingsTextBlock.FontSize = fontsize - 4;
+            SettingsTextBlock.Padding = thickness;
+            DebugIcon.FontSize = fontsize + 2;
+            DebugTextBlock.FontSize = fontsize - 4;
+            DebugTextBlock.Padding = thickness;
+            WishListIcon.FontSize = fontsize + 2;
+            WishListTextBlock.FontSize = fontsize - 4;
+            WishListTextBlock.Padding = thickness;
+            MySplitViewButton.Width = buttonsize;
+            MySplitView.CompactPaneLength = buttonsize;
+            MySplitView.OpenPaneLength = openpanelength;
         }
 
         private async void MySplitViewListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -50,6 +74,16 @@ namespace Pocketeer
             }
             else if (MySplitViewListBox.SelectedIndex == 1)
             {
+                PageUserIsOn.Text = "Wish List";
+                FrameForInfoPlusSettings.Navigate(typeof(WishList));
+            }
+            else if (MySplitViewListBox.SelectedIndex == 2)
+            {
+                PageUserIsOn.Text = "Debug";
+                FrameForInfoPlusSettings.Navigate(typeof(Debug));
+            }
+            else if (MySplitViewListBox.SelectedIndex == 3)
+            {
                 PageUserIsOn.Text = "Settings";
                 FrameForInfoPlusSettings.Navigate(typeof(Settings));
             }
@@ -59,41 +93,39 @@ namespace Pocketeer
         {
             if (Window.Current.Bounds.Height <= 350 || Window.Current.Bounds.Width <= 460)
             {
-                int fontsize = 16;
-                MySplitViewButton.FontSize = fontsize + 2;
-                PageUserIsOn.FontSize = fontsize;
-                InfomationIcon.FontSize = fontsize + 2;
-                InfomationTextBlock.FontSize = fontsize - 4;
-                InfomationTextBlock.Padding = new Thickness(16,0,0,0);
-                SettingsIcon.FontSize = fontsize + 2;
-                SettingsTextBlock.FontSize = fontsize - 4;
-                SettingsTextBlock.Padding = new Thickness(16, 0, 0, 0);
-                MySplitViewButton.Height = 46;
-                MySplitViewButton.Width = 46;
-                MySplitView.CompactPaneLength = 46;
-                MySplitView.OpenPaneLength = 130;
+                ChangeUISizing(16,new Thickness(16,0,0,0), CompactPaneLength - 4, CompactPaneLength + 80);
             }
             else
             {
-                int fontsize = 20;
-                MySplitViewButton.FontSize = fontsize + 2;
-                PageUserIsOn.FontSize = fontsize;
-                InfomationIcon.FontSize = fontsize + 2;
-                InfomationTextBlock.FontSize = fontsize - 4;
-                InfomationTextBlock.Padding = new Thickness(20, 0, 0, 0);
-                SettingsIcon.FontSize = fontsize + 2;
-                SettingsTextBlock.FontSize = fontsize - 4;
-                SettingsTextBlock.Padding = new Thickness(20, 0, 0, 0);
-                MySplitViewButton.Height = 50;
-                MySplitViewButton.Width = 50;
-                MySplitView.CompactPaneLength = 50;
-                MySplitView.OpenPaneLength = 150;
+                ChangeUISizing(20, new Thickness(20, 0, 0, 0), CompactPaneLength, CompactPaneLength + 100);
             }
         }
 
-        private void Grid_Loading(FrameworkElement sender, object args)
+        private async void Grid_Loading(FrameworkElement sender, object args)
         {
+#if DEBUG
+            LBIDebug.Visibility = Visibility.Visible;
+#endif
+            MySplitViewButton.Background = new SolidColorBrush((Color)this.Resources["SystemAccentColor"]);
+            await Task.Delay(1000);
+            StoreContext context = StoreContext.GetDefault();
+            StoreAppLicense appLicense = await context.GetAppLicenseAsync();
+            foreach (KeyValuePair<string, StoreLicense> item in appLicense.AddOnLicenses)
+            {
+                StoreLicense addOnLicense = item.Value;
+                if (addOnLicense.InAppOfferToken == "RemoveAdvertsInPocketeer")
+                {
+                    if (addOnLicense.IsActive)
+                    {
+                        Ad.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+        }
 
+        private void MySplitViewButton_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            MySplitViewButton.Background = new SolidColorBrush((Color)this.Resources["SystemAccentColor"]);
         }
     }
 }

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -35,11 +37,20 @@ namespace Pocketeer
         private void MainGrid_Loading(FrameworkElement sender, object args)
         {
             Object SetupNeeded = localSettings.Values["SetupNeeded"];
-
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Colors.Gray;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Gray;
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
+            {
+                CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                titleBar.ButtonBackgroundColor = Colors.Gray;
+                titleBar.ButtonInactiveBackgroundColor = Colors.Gray;
+                CoreApplicationViewTitleBar applicationViewTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                Window.Current.SetTitleBar(NavBar);
+            }
+            else
+            {
+                NavBar.Visibility = Visibility.Collapsed;
+                AppName.Visibility = Visibility.Collapsed;
+            }
 
             if (SetupNeeded == null)
             {

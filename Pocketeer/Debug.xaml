@@ -1,0 +1,15 @@
+﻿<Page
+    x:Class="Pocketeer.Debug"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Pocketeer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Loading="Grid_Loading" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <ScrollViewer>
+            <TextBlock Name="Info" HorizontalAlignment="Center" Margin="10,0,10,0"  VerticalAlignment="Center" TextWrapping="Wrap"/>
+        </ScrollViewer>
+    </Grid>
+</Page>

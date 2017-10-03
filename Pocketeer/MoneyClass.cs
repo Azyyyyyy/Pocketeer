@@ -7,12 +7,35 @@ using System.Threading.Tasks;
 //Added
 using Windows.UI.Notifications;
 using Windows.Data.Xml.Dom;
+using Windows.Foundation.Metadata;
 
 namespace Pocketeer
 {
     class MoneyClass
     {
         static Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        public static List<string> currencysymbols = new List<string>();
+        public static bool ShowAds = true;
+
+        public static void ResetItems()
+        {
+            int itemint = 0;
+
+            while (true)
+            {
+                if (localSettings.Values[$"Item{itemint}Name"] == null)
+                {
+                    break;
+                }
+                else
+                {
+                    localSettings.Values[$"Item{itemint}Name"] = null;
+                    localSettings.Values[$"Item{itemint}Price"] = null;
+                    localSettings.Values[$"Item{itemint}Link"] = null;
+                    itemint++;
+                }
+            }
+        }
 
         public async static Task Restore()
         {
@@ -25,6 +48,8 @@ namespace Pocketeer
             }
             else if (fileloc.Path.Length >= 1)
             {
+                int fileint = 15;
+                int itemint = 0;
                 var file = await Windows.Storage.FileIO.ReadLinesAsync(fileloc);
                 string[] strings = new string[file.Count];
                 file.CopyTo(strings, 0);
@@ -36,18 +61,57 @@ namespace Pocketeer
                 localSettings.Values["HowMuchMoneyDoesUserHave"] = file[9];
                 localSettings.Values["WhenMoneyNeedsGoingIn"] = file[11];
                 localSettings.Values["SetupNeeded"] = "false";
+                try
+                {
+                    if (!(file[13].ToString() == "Null"))
+                    {
+                        localSettings.Values["Currency"] = file[13];
+                    }
+                }
+                catch
+                {
+                }
+                ResetItems();
+                while (true)
+                {
+                    try
+                    {
+                        if (file[fileint] == null)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            localSettings.Values[$"Item{itemint}Name"] = file[fileint];
+                            fileint = fileint + 2;
+                            localSettings.Values[$"Item{itemint}Price"] = file[fileint];
+                            fileint = fileint + 2;
+                            if (!(file[fileint] == "Null"))
+                            {
+                                localSettings.Values[$"Item{itemint}Link"] = file[fileint];
+                            }
+                            fileint = fileint + 2;
+                            itemint++;
+                        }
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                }
             }
         }
-
         public static void UpdateTileNotifications()
         {
-            TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(true);
-            //TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            if (ApiInformation.IsTypePresent("Windows.UI.Notifications"))
+            {
+                TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(true);
+                //TileUpdateManager.CreateTileUpdaterForApplication().Clear();
 
-            string ProgramName = "Pocketeer";
-            string subject = "You have got";
-            string body = "£" + localSettings.Values["HowMuchMoneyDoesUserHave"].ToString();
-            string content = $@"
+                string ProgramName = "Pocketeer";
+                string subject = "You have got";
+                string body = "£" + localSettings.Values["HowMuchMoneyDoesUserHave"].ToString();
+                string content = $@"
 <tile>
     <visual>
         <binding template='TileMedium'>
@@ -63,9 +127,9 @@ namespace Pocketeer
     </visual>
 </tile>";
 
-            string subject2 = "You get";
-            string body2 = "£" + localSettings.Values["HowMuchMoneyDoesUserGet"];
-            string content2 = $@"
+                string subject2 = "You get";
+                string body2 = "£" + localSettings.Values["HowMuchMoneyDoesUserGet"];
+                string content2 = $@"
 <tile>
     <visual>
         <binding template='TileMedium'>
@@ -81,11 +145,11 @@ namespace Pocketeer
     </visual>
 </tile>";
 
-            string subject3 = "You get your money on";
-            DateTime DateMoneyIsAddedToTotalDateTime = DateTime.Now;
-            DateMoneyIsAddedToTotalDateTime = Convert.ToDateTime(localSettings.Values["WhatDayDoesUserGetMoney"]);
-            string body3 = DateMoneyIsAddedToTotalDateTime.ToString("dd/MM/yy");
-            string content3 = $@"
+                string subject3 = "You get your money on";
+                DateTime DateMoneyIsAddedToTotalDateTime = DateTime.Now;
+                DateMoneyIsAddedToTotalDateTime = Convert.ToDateTime(localSettings.Values["WhatDayDoesUserGetMoney"].ToString());
+                string body3 = DateMoneyIsAddedToTotalDateTime.ToString("dd/MM/yy");
+                string content3 = $@"
 <tile>
     <visual>
         <binding template='TileMedium'>
@@ -101,24 +165,25 @@ namespace Pocketeer
     </visual>
 </tile>";
 
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(content);
-            var notification = new TileNotification(doc);
-            notification.Tag = "HowMuchMoneyDoesUserHave";
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(content);
+                var notification = new TileNotification(doc);
+                notification.Tag = "HowMuchMoneyDoesUserHave";
 
-            XmlDocument doc2 = new XmlDocument();
-            doc2.LoadXml(content2);
-            var notification2 = new TileNotification(doc2);
-            notification.Tag = "HowMuchMoneyDoesUserGet";
+                XmlDocument doc2 = new XmlDocument();
+                doc2.LoadXml(content2);
+                var notification2 = new TileNotification(doc2);
+                notification.Tag = "HowMuchMoneyDoesUserGet";
 
-            XmlDocument doc3 = new XmlDocument();
-            doc3.LoadXml(content3);
-            var notification3 = new TileNotification(doc3);
-            notification.Tag = "WhatDayDoesUserGetMoney";
+                XmlDocument doc3 = new XmlDocument();
+                doc3.LoadXml(content3);
+                var notification3 = new TileNotification(doc3);
+                notification.Tag = "WhatDayDoesUserGetMoney";
 
-            TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
-            TileUpdateManager.CreateTileUpdaterForApplication().Update(notification2);
-            TileUpdateManager.CreateTileUpdaterForApplication().Update(notification3);
+                TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
+                TileUpdateManager.CreateTileUpdaterForApplication().Update(notification2);
+                TileUpdateManager.CreateTileUpdaterForApplication().Update(notification3);
+            }
         }
 
         public async static Task MakeBackupFile()
@@ -136,6 +201,49 @@ namespace Pocketeer
             }
             else if (file.Path.Length >= 1)
             {
+                int itemint = 0;
+                string currency = "[Currency]" + Environment.NewLine +
+                                  "Null";
+                string wishlistinfo = "";
+                if (!(localSettings.Values["Currency"] == null))
+                {
+                    currency = currency.Replace("Null", localSettings.Values["Currency"].ToString());
+                }
+                while (true)
+                {
+                    if (localSettings.Values[$"Item{itemint}Name"] == null)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        string wishlistlink = "Null";
+                        if (!(localSettings.Values[$"Item{itemint}Link"] == null))
+                        {
+                            wishlistlink = localSettings.Values[$"Item{itemint}Link"].ToString();
+                        }
+                        if (wishlistinfo.Length == 0)
+                        {
+                            wishlistinfo = $"[Item{itemint}Name]" + Environment.NewLine +
+                                           localSettings.Values[$"Item{itemint}Name"].ToString() + Environment.NewLine +
+                                           $"[Item{itemint}Price]" + Environment.NewLine +
+                                           localSettings.Values[$"Item{itemint}Price"].ToString() + Environment.NewLine +
+                                           $"[Item{itemint}Link]" + Environment.NewLine +
+                                           wishlistlink;
+                        }
+                        else
+                        {
+                            wishlistinfo = wishlistinfo + Environment.NewLine +
+                                           $"[Item{itemint}Name]" + Environment.NewLine +
+                                           localSettings.Values[$"Item{itemint}Name"].ToString() + Environment.NewLine +
+                                           $"[Item{itemint}Price]" + Environment.NewLine +
+                                           localSettings.Values[$"Item{itemint}Price"].ToString() + Environment.NewLine +
+                                           $"[Item{itemint}Link]" + Environment.NewLine +
+                                           wishlistlink;
+                        }
+                        itemint++;
+                    }
+                }
                 string content = "[DoesUserGetMoney]" + Environment.NewLine +
                                  localSettings.Values["DoesUserGetMoney"].ToString() + Environment.NewLine +
                                  "[WhatDayDoesUserGetMoney]" + Environment.NewLine +
@@ -147,7 +255,9 @@ namespace Pocketeer
                                  "[HowMuchMoneyDoesUserHave]" + Environment.NewLine +
                                  localSettings.Values["HowMuchMoneyDoesUserHave"].ToString() + Environment.NewLine +
                                  "[WhenMoneyNeedsGoingIn]" + Environment.NewLine +
-                                 localSettings.Values["WhenMoneyNeedsGoingIn"].ToString();
+                                 localSettings.Values["WhenMoneyNeedsGoingIn"].ToString() + Environment.NewLine +
+                                 currency + Environment.NewLine +
+                                 wishlistinfo;
                 await Windows.Storage.FileIO.WriteTextAsync(file, content);
             }
         }
@@ -166,6 +276,7 @@ namespace Pocketeer
                 if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Week")
                 {
                     localSettings.Values["WhenMoneyNeedsGoingIn"] = Convert.ToString(DateTime.Now.Date.AddDays(Days));
+                    localSettings.Values["WhatDayDoesUserGetMoney"] = Convert.ToString(DateTime.Now.Date.AddDays(Days));
                 }
                 else if (localSettings.Values["HowOftenDoesUserGetMoney"].ToString() == "Every Month")
                 {

@@ -102,6 +102,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Debug.xaml.cs">
+      <DependentUpon>Debug.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FrameForInfoPlusSettingsXAML.xaml.cs">
       <DependentUpon>FrameForInfoPlusSettingsXAML.xaml</DependentUpon>
     </Compile>
@@ -122,6 +125,9 @@
     <Compile Include="SetupPart2.xaml.cs">
       <DependentUpon>SetupPart2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WishList.xaml.cs">
+      <DependentUpon>WishList.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -132,6 +138,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\black-icon.png" />
+    <Content Include="Assets\Discord-Logo-Black.png" />
+    <Content Include="Assets\Discord-Logo-White.png" />
     <Content Include="Assets\github%28black%29-icon.png" />
     <Content Include="Assets\github%28white%29-icon.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
@@ -189,6 +197,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Debug.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="FrameForInfoPlusSettingsXAML.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -213,6 +225,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="WishList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
@@ -221,6 +237,14 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>10.0.3</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="Microsoft.Advertising.Xaml, Version=10.0">
+      <Name>Microsoft Advertising SDK for XAML</Name>
+    </SDKReference>
+    <SDKReference Include="Microsoft.VCLibs, Version=14.0">
+      <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

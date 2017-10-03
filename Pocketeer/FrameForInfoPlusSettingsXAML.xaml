@@ -5,6 +5,7 @@
     xmlns:local="using:Pocketeer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:UI="using:Microsoft.Advertising.WinRT.UI"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loading="Grid_Loading" Name="Grid" SizeChanged="Grid_SizeChanged">
@@ -13,19 +14,34 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
+       <!-- Top of Pocketeer UI -->
         <RelativePanel>
             <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" RelativePanel.RightOf="MySplitViewButton" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True"/>
-            <Button FontSize="22" Style="{ThemeResource AccentButtonStyle}" Click="MySplitViewButton_Click" Name="MySplitViewButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"/>
+            <UI:AdControl ApplicationId="9n3h90r55cr1" Visibility="Visible" Name="Ad" AdUnitId="11700910" HorizontalAlignment="Center" VerticalAlignment="Center" RelativePanel.AlignRightWithPanel="True" Width="320" Height="50" Grid.ColumnSpan="3"/>
+            <Button FontSize="22" Width="50" Foreground="White" Style="{StaticResource NavigationBackButtonNormalStyle}" Height="50" PointerEntered="MySplitViewButton_PointerEntered" Click="MySplitViewButton_Click" Name="MySplitViewButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"/>
             <TextBlock FontSize="20" Name="PageUserIsOn" Text="Infomation" Style="{ThemeResource TitleTextBlockStyle}" RelativePanel.RightOf="MySplitViewButton" Padding="20,0,0,0" RelativePanel.AlignVerticalCenterWith="MySplitViewButton"/> 
         </RelativePanel>
         
-        <SplitView Name="MySplitView" Grid.Row="1" OpenPaneLength="150" CompactPaneLength="50" DisplayMode="CompactOverlay">
+        <!-- Navbar -->
+        <SplitView Name="MySplitView" Grid.Row="1" OpenPaneLength="150" DisplayMode="CompactOverlay">
             <SplitView.Pane>
                 <ListBox Name="MySplitViewListBox" SelectionChanged="MySplitViewListBox_SelectionChanged">
                     <ListBoxItem IsSelected="True">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Name="InfomationIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE13D;" FontSize="22" VerticalAlignment="Center"/>
                             <TextBlock Name="InfomationTextBlock" Text="Infomation" FontSize="16" Padding="20,0,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Name="WishListIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE1CF;" FontSize="22" VerticalAlignment="Center"/>
+                            <TextBlock Name="WishListTextBlock" Text="Wish List" FontSize="16" Padding="20,0,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem Name="LBIDebug" Visibility="Collapsed">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Name="DebugIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE148;" FontSize="22" VerticalAlignment="Center"/>
+                            <TextBlock Name="DebugTextBlock" Text="Debug" FontSize="16" Padding="20,0,0,0"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem>
@@ -37,9 +53,9 @@
                 </ListBox>
             </SplitView.Pane>
             <SplitView.Content>
+                <!-- Frame to show other UI .E.G. Info -->
                 <Frame Name="FrameForInfoPlusSettings"/>
             </SplitView.Content>
         </SplitView>
-
     </Grid>
 </Page>

@@ -61,21 +61,27 @@ namespace Pocketeer
                     NextButton.IsEnabled = false;
                 }
             }
-            else if (HowMuchMoneyDoesUserHaveTextBox.Text.Length >= 1)
+            else
             {
-                NextButton.IsEnabled = true;
+                if (HowMuchMoneyDoesUserHaveTextBox.Text.Length >= 1)
+                {
+                    NextButton.IsEnabled = true;
+                }
+                else
+                {
+                    NextButton.IsEnabled = false;
+                }
             }
         }
 
 
         private async void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            NextButton.Flyout.Hide();
-            string pattern = "£";
-            string replacement = "";
+            string pattern = @"\p{Sc}";
             Regex rgx = new Regex(pattern);
-            HowMuchMoneyDoesUserGetTextBox.Text = rgx.Replace(HowMuchMoneyDoesUserGetTextBox.Text, replacement);
-            HowMuchMoneyDoesUserHaveTextBox.Text = rgx.Replace(HowMuchMoneyDoesUserHaveTextBox.Text, replacement);
+            HowMuchMoneyDoesUserGetTextBox.Text = rgx.Replace(HowMuchMoneyDoesUserGetTextBox.Text, "");
+            HowMuchMoneyDoesUserHaveTextBox.Text = rgx.Replace(HowMuchMoneyDoesUserHaveTextBox.Text, "");
+            NextButton.Flyout.Hide();
             if (DoesUserGetMoney.IsOn)
             {
                 if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 0)
@@ -289,7 +295,7 @@ namespace Pocketeer
                 localSettings.Values["DoesUserGetMoney"] = "true";
                 if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 0)
                 {
-                    localSettings.Values["WhatDayDoesUserGetMoney"] = WhatDayDoesUserGetMoneyComboBox.SelectionBoxItem.ToString();
+                    localSettings.Values["WhatDayDoesUserGetMoney"] = localSettings.Values["WhenMoneyNeedsGoingIn"].ToString();
                 }
                 else if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == 1)
                 {
@@ -315,35 +321,11 @@ namespace Pocketeer
                     localSettings.Values["HowMuchMoneyDoesUserGet"] = Convert.ToString(Convert.ToDouble(HowMuchMoneyDoesUserGetTextBox.Text.ToString()));
                     localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToString(Convert.ToDouble(HowMuchMoneyDoesUserHaveTextBox.Text.ToString()));
                     localSettings.Values["SetupNeeded"] = "false";
+                    NextButtonStackPanel.Visibility = Visibility.Collapsed;
                     await Task.Delay(250);
                     Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
                 }
-                catch (OverflowException)
-                {
-                    NextButton.Flyout.ShowAt(NextButton);
-                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
-                    NextButtonFlyoutTextBlock.Text = "Pocketeer can't handle that much money!";
-                }
-                catch (FormatException)
-                {
-                     NextButton.Flyout.ShowAt(NextButton);
-                }
-            catch
-                {
-                    NextButton.Flyout.ShowAt(NextButton);
-                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
-                    NextButtonFlyoutTextBlock.Text = "An error has occurred, try again";
-                }
-            }
-            else
-            {
-                try
-                {
-                    localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToString(Convert.ToDouble(HowMuchMoneyDoesUserHaveTextBox.Text.ToString()));
-                    localSettings.Values["DoesUserGetMoney"] = "false";
-                    localSettings.Values["SetupNeeded"] = "false";
-                    Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
-                }
+#if !DEBUG
                 catch (OverflowException)
                 {
                     NextButton.Flyout.ShowAt(NextButton);
@@ -360,6 +342,79 @@ namespace Pocketeer
                     NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
                     NextButtonFlyoutTextBlock.Text = "An error has occurred, try again";
                 }
+#endif
+#if DEBUG
+                catch (Exception a)
+                {
+                    NextButton.Flyout.ShowAt(NextButton);
+                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    NextButtonFlyoutTextBlock.Height = 500;
+                    NextButtonFlyoutTextBlock.Text =
+                        "StackTrace:" + Environment.NewLine + 
+                        a.StackTrace + Environment.NewLine + Environment.NewLine + 
+                        "Source:" + Environment.NewLine +
+                        a.Source +  Environment.NewLine + Environment.NewLine + 
+                        "Message:" + Environment.NewLine + 
+                        a.Message + Environment.NewLine + Environment.NewLine + 
+                        "InnerException:" + Environment.NewLine +
+                        a.InnerException + Environment.NewLine + Environment.NewLine + 
+                        "HResult:" + Environment.NewLine + 
+                        a.HResult + Environment.NewLine + Environment.NewLine + 
+                        "HelpLink:" + Environment.NewLine + 
+                        a.HelpLink + Environment.NewLine + Environment.NewLine + 
+                        "Data:" + Environment.NewLine + a.Data;
+                }
+#endif
+            }
+            else
+            {
+                try
+                {
+                    localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToString(Convert.ToDouble(HowMuchMoneyDoesUserHaveTextBox.Text.ToString()));
+                    localSettings.Values["DoesUserGetMoney"] = "false";
+                    localSettings.Values["SetupNeeded"] = "false";
+                    NextButtonStackPanel.Visibility = Visibility.Collapsed;
+                    Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
+                }
+#if !DEBUG
+                catch (OverflowException)
+                {
+                    NextButton.Flyout.ShowAt(NextButton);
+                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    NextButtonFlyoutTextBlock.Text = "Pocketeer can't handle that much money!";
+                }
+                catch (FormatException)
+                {
+                    NextButton.Flyout.ShowAt(NextButton);
+                }
+                catch
+                {
+                    NextButton.Flyout.ShowAt(NextButton);
+                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    NextButtonFlyoutTextBlock.Text = "An error has occurred, try again";
+                }
+#endif
+#if DEBUG
+                catch (Exception a)
+                {
+                    NextButton.Flyout.ShowAt(NextButton);
+                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    NextButtonFlyoutTextBlock.Text =
+                        "StackTrace:" + Environment.NewLine +
+                        a.StackTrace + Environment.NewLine + Environment.NewLine +
+                        "Source:" + Environment.NewLine +
+                        a.Source + Environment.NewLine + Environment.NewLine +
+                        "Message:" + Environment.NewLine +
+                        a.Message + Environment.NewLine + Environment.NewLine +
+                        "InnerException:" + Environment.NewLine +
+                        a.InnerException + Environment.NewLine + Environment.NewLine +
+                        "HResult:" + Environment.NewLine +
+                        a.HResult + Environment.NewLine + Environment.NewLine +
+                        "HelpLink:" + Environment.NewLine +
+                        a.HelpLink + Environment.NewLine + Environment.NewLine +
+                        "Data:" + Environment.NewLine + a.Data;
+                }
+#endif
             }
         }
 
@@ -371,7 +426,6 @@ namespace Pocketeer
                 {
                     Grid.SetRow(HowMuchMoneyDoesUserHaveTextBlock, 5);
                     Grid.SetRow(HowMuchMoneyDoesUserHaveTextBox, 5);
-                    NextButton.IsEnabled = false;
                     if (HowOftenDoesUserGetMoneyComboBox.SelectedIndex == -1)
                     {
                         WhatDayDoesUserGetMoneyComboBox.Visibility = Visibility.Visible;
@@ -395,10 +449,7 @@ namespace Pocketeer
                     HowMuchMoneyDoesUserGetTextBox.Visibility = Visibility.Visible;
                     Grid.SetRowSpan(HowMuchMoneyDoesUserHaveTextBlock, 1);
                     Grid.SetRowSpan(HowMuchMoneyDoesUserHaveTextBox, 1);
-                    if (WhatDayDoesUserGetMoneyComboBox.SelectedIndex >= 0 && HowOftenDoesUserGetMoneyComboBox.SelectedIndex >= 0 && HowMuchMoneyDoesUserGetTextBox.Text.Length >= 1 && HowMuchMoneyDoesUserHaveTextBox.Text.Length >= 1)
-                    {
-                        NextButton.IsEnabled = true;
-                    }
+                    DoesSaveButtonNeedToBeEnabled();
                 }
                 catch
                 {
@@ -487,6 +538,11 @@ namespace Pocketeer
             {
                 NextButtonFlyoutTextBlock.Text = NextButtonFlyoutTextBlockBackup;
             }
+        }
+
+        private void Grid_Loading(FrameworkElement sender, object args)
+        {
+            HowOftenDoesUserGetMoneyComboBox.SelectedIndex = 0;
         }
     }
 }
