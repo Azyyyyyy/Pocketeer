@@ -12,8 +12,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Rectangle Height="32" Name="NavBar" Fill="Gray"/>
-        <TextBlock Text="Pocketeer" Name="AppName" Padding="8,8,0,0" FontSize="12" Foreground="White"/>
+        <Grid x:Name="MenuBarGrid">
+            <Rectangle Height="32" Name="NavBar" Fill="Gray"/>
+            <StackPanel Orientation="Horizontal">
+                <Image Source="Assets/MenuBarlogoWhite.png" Name="MenuLogo" Margin="5,0,0,0" Height="32" Width="40" Stretch="Uniform" VerticalAlignment="Center"/>
+                <TextBlock Text="Pocketeer" Name="AppName" Padding="0,8,0,0" FontSize="12" Foreground="White"/>
+            </StackPanel>
+        </Grid>
         <Frame Name="OtherUI" Grid.Row="1"/>
     </Grid>
 </Page>

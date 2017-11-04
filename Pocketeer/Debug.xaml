@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Loading="Grid_Loading" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Loading="Grid_Loading" Name="grid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ScrollViewer>
             <TextBlock Name="Info" HorizontalAlignment="Center" Margin="10,0,10,0"  VerticalAlignment="Center" TextWrapping="Wrap"/>
         </ScrollViewer>

@@ -36,6 +36,7 @@ namespace Pocketeer
             {
                 CurrencyChoose.SelectedIndex = Convert.ToInt32(localSettings.Values["Currency"].ToString());
             }
+            MoneyClass.AddAcrylicBrush(grid, null);
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)

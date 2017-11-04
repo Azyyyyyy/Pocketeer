@@ -7,9 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     FontSize="26"
+    MinHeight="350"
     >
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="grid" Loading="grid_Loading" SizeChanged="grid_SizeChanged">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="grid" Loading="grid_Loading">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -22,12 +23,24 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <TextBlock Name="TotalMoneyTextBlock" Text="You got £{Money}" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock Name="HowMuchMoneyUserGetsTextBlock" Text="You get £{Money}" Grid.Row="1" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock Name="WhatDayMoneyTextBlock" Text="You get your money on {Day}" Grid.Row="2" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock Name="WhenDayMoneyGetsAddedTextBlock" Text="That is in {HowMuchDays} Days" Grid.Row="3" TextWrapping="WrapWholeWords" TextAlignment="Center" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <StackPanel Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="You have got" FontSize="22" TextAlignment="Center"/>
+                <TextBlock Name="TotalMoneyTextBlock" FontSize="32" Text="£{Money}" HorizontalAlignment="Center"/>
+            </StackPanel>
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center">
+                <TextBlock Text="You get" FontSize="22" TextAlignment="Center"/>
+                <TextBlock x:Name="HowMuchMoneyUserGetsTextBlock" FontSize="32" Text="£{Money}" HorizontalAlignment="Center"/>
+            </StackPanel>
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="You get your money on" FontSize="22" TextAlignment="Center"/>
+                <TextBlock Name="WhatDayMoneyTextBlock" FontSize="32" Text=" {Day}" TextAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Name="ThatInTextBlock" Text="That in" FontSize="22" TextAlignment="Center"/>
+            <TextBlock Name="WhenDayMoneyGetsAddedTextBlock" FontSize="32" TextAlignment="Center" Text=" {HowMuchDays} Days"/>
+        </StackPanel>
 
-        <Button Name="AddMoneyToTotalButton" FontSize="16" Content="Add Money" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button Name="AddMoneyToTotalButton" FontSize="16" Content="Add Money" Grid.Row="4" VerticalAlignment="Center" Margin="20,0,0,0">
             <Button.Flyout>
                 <Flyout>
                     <StackPanel>
@@ -47,7 +60,7 @@
                 </Flyout>
             </Button.Flyout>
         </Button>
-        <Button Name="RemoveMoneyToTotalButton" FontSize="16" Content="Remove Money" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button Name="RemoveMoneyToTotalButton" FontSize="16" Content="Remove Money" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
             <Button.Flyout>
                 <Flyout>
                     <StackPanel>

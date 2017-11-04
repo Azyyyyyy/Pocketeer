@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,38 +27,58 @@ namespace Pocketeer
     public sealed partial class FrameForInfoPlusSettingsXAML : Page
     {
         Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-        int CompactPaneLength = 50;
+        Color bgcolor = new Color();
 
         public FrameForInfoPlusSettingsXAML()
         {
             InitializeComponent();
-            MySplitView.CompactPaneLength = CompactPaneLength;
+            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase") && MoneyClass.DoesAcrylicBrushWorks)
+            {
+                AcrylicBrush myBrush = new AcrylicBrush();
+                myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
+                AcrylicBrush myBrush2 = new AcrylicBrush();
+                myBrush2.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
+                if (App.Current.RequestedTheme == ApplicationTheme.Dark)
+                {
+                    if (localSettings.Values["CustomEnabled"] != null)
+                    {
+                        myBrush2.TintColor = Color.FromArgb(Convert.ToByte(localSettings.Values["CustomA"]), Convert.ToByte(localSettings.Values["CustomR"]), Convert.ToByte(localSettings.Values["CustomG"]), Convert.ToByte(localSettings.Values["CustomB"]));
+                        myBrush.TintColor = Color.FromArgb(Convert.ToByte(localSettings.Values["CustomA"]), Convert.ToByte(localSettings.Values["CustomR"]), Convert.ToByte(localSettings.Values["CustomG"]), Convert.ToByte(localSettings.Values["CustomB"]));
+                    }
+                    else
+                    {
+                        myBrush.TintColor = Color.FromArgb(255, 0, 0, 0);
+                        myBrush2.TintColor = Color.FromArgb(255, 0, 0, 0);
+                    }
+                    myBrush.FallbackColor = Color.FromArgb(255, 0, 0, 0);
+                    myBrush2.FallbackColor = Color.FromArgb(255, 45, 45, 45);
+                }
+                else
+                {
+                    if (localSettings.Values["CustomEnabled"] != null)
+                    {
+                        myBrush2.TintColor = Color.FromArgb(Convert.ToByte(localSettings.Values["CustomA"]), Convert.ToByte(localSettings.Values["CustomR"]), Convert.ToByte(localSettings.Values["CustomG"]), Convert.ToByte(localSettings.Values["CustomB"]));
+                        myBrush.TintColor = Color.FromArgb(Convert.ToByte(localSettings.Values["CustomA"]), Convert.ToByte(localSettings.Values["CustomR"]), Convert.ToByte(localSettings.Values["CustomG"]), Convert.ToByte(localSettings.Values["CustomB"]));
+                    }
+                    else
+                    {
+                        myBrush.TintColor = Color.FromArgb(255, 255, 255, 255);
+                        myBrush2.TintColor = Color.FromArgb(255, 255, 255, 255);
+                    }
+                    myBrush.FallbackColor = Color.FromArgb(255, 240, 240, 240);
+                    myBrush2.FallbackColor = Color.FromArgb(255, 240, 240, 240);
+                }
+                myBrush.TintOpacity = 0.6;
+                myBrush2.TintOpacity = 0.4;
+
+                RecPageUserIsOn.Fill = myBrush;
+                MySplitViewListBox.Background = myBrush2;
+            }
         }
 
         private void MySplitViewButton_Click(object sender, RoutedEventArgs e)
         {
             MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
-        }
-
-        void ChangeUISizing(int fontsize, Thickness thickness, int buttonsize, int openpanelength)
-        {
-            MySplitViewButton.FontSize = fontsize + 2;
-            PageUserIsOn.FontSize = fontsize;
-            InfomationIcon.FontSize = fontsize + 2;
-            InfomationTextBlock.FontSize = fontsize - 4;
-            InfomationTextBlock.Padding = thickness;
-            SettingsIcon.FontSize = fontsize + 2;
-            SettingsTextBlock.FontSize = fontsize - 4;
-            SettingsTextBlock.Padding = thickness;
-            DebugIcon.FontSize = fontsize + 2;
-            DebugTextBlock.FontSize = fontsize - 4;
-            DebugTextBlock.Padding = thickness;
-            WishListIcon.FontSize = fontsize + 2;
-            WishListTextBlock.FontSize = fontsize - 4;
-            WishListTextBlock.Padding = thickness;
-            MySplitViewButton.Width = buttonsize;
-            MySplitView.CompactPaneLength = buttonsize;
-            MySplitView.OpenPaneLength = openpanelength;
         }
 
         private async void MySplitViewListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -91,14 +111,12 @@ namespace Pocketeer
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (Window.Current.Bounds.Height <= 350 || Window.Current.Bounds.Width <= 460)
-            {
-                ChangeUISizing(16,new Thickness(16,0,0,0), CompactPaneLength - 4, CompactPaneLength + 80);
-            }
-            else
-            {
-                ChangeUISizing(20, new Thickness(20, 0, 0, 0), CompactPaneLength, CompactPaneLength + 100);
-            }
+            MySplitView.CompactPaneLength = 50;
+            MySplitView.OpenPaneLength = 150;
+            InfomationIcon.Visibility = Visibility.Visible;
+            WishListIcon.Visibility = Visibility.Visible;
+            DebugIcon.Visibility = Visibility.Visible;
+            SettingsIcon.Visibility = Visibility.Visible;
         }
 
         private async void Grid_Loading(FrameworkElement sender, object args)
@@ -106,8 +124,8 @@ namespace Pocketeer
 #if DEBUG
             LBIDebug.Visibility = Visibility.Visible;
 #endif
-            MySplitViewButton.Background = new SolidColorBrush((Color)this.Resources["SystemAccentColor"]);
-            await Task.Delay(1000);
+            bgcolor = (Color)this.Resources["SystemAccentColor"];
+            MySplitViewButton.Background = new SolidColorBrush((Color)this.Resources["SystemAccentColor"]); 
             StoreContext context = StoreContext.GetDefault();
             StoreAppLicense appLicense = await context.GetAppLicenseAsync();
             foreach (KeyValuePair<string, StoreLicense> item in appLicense.AddOnLicenses)
@@ -121,11 +139,6 @@ namespace Pocketeer
                     }
                 }
             }
-        }
-
-        private void MySplitViewButton_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            MySplitViewButton.Background = new SolidColorBrush((Color)this.Resources["SystemAccentColor"]);
         }
     }
 }

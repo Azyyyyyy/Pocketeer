@@ -9,6 +9,7 @@ using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Services.Store;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,16 +36,21 @@ namespace Pocketeer
             InitializeComponent();
             Suspending += OnSuspending;
             Object RequestedThemeInfo = localSettings.Values["RequestedTheme"];
-            if (RequestedThemeInfo == null)
+            if (localSettings.Values["CustomEnabled"] != null)
             {
+                MoneyClass.color = Color.FromArgb(Convert.ToByte(localSettings.Values["CustomA"]), Convert.ToByte(localSettings.Values["CustomR"]), Convert.ToByte(localSettings.Values["CustomG"]), Convert.ToByte(localSettings.Values["CustomB"]));
+                RequestedTheme = (PerceivedBrightness(MoneyClass.color) > 130 ? ApplicationTheme.Light : ApplicationTheme.Dark);
+                MoneyClass.EnabledTint = true;
             }
-            else if (RequestedThemeInfo.ToString() == "Dark")
+            else if (RequestedThemeInfo != null && RequestedThemeInfo.ToString() == "Dark")
             {
                 RequestedTheme = ApplicationTheme.Dark;
+                MoneyClass.EnabledTint = false;
             }
-            else if (RequestedThemeInfo.ToString() == "Light")
+            else if (RequestedThemeInfo != null && RequestedThemeInfo.ToString() == "Light")
             {
                 RequestedTheme = ApplicationTheme.Light;
+                MoneyClass.EnabledTint = false;
             }
             MoneyClass.currencysymbols.Add("$");
             MoneyClass.currencysymbols.Add("£");
@@ -53,6 +59,14 @@ namespace Pocketeer
             MoneyClass.currencysymbols.Add("₹");
             MoneyClass.currencysymbols.Add("R$");
             MoneyClass.currencysymbols.Add("€");
+        }
+
+        private int PerceivedBrightness(Color c)
+        {
+            return (int)Math.Sqrt(
+            c.R * c.R * .241 +
+            c.G * c.G * .691 +
+            c.B * c.B * .068);
         }
 
         /// <summary>
@@ -70,6 +84,7 @@ namespace Pocketeer
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
+                rootFrame.MinHeight = 370;
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 

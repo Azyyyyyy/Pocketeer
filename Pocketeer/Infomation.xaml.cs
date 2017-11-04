@@ -1,21 +1,14 @@
-﻿using System;
+﻿using Microsoft.Advertising.WinRT.UI;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Threading.Tasks;
+using Windows.Foundation.Metadata;
+using Windows.Services.Store;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Microsoft.Advertising.WinRT.UI;
-using Windows.Services.Store;
-using System.Threading.Tasks;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -30,6 +23,7 @@ namespace Pocketeer
         double TotalMoney = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserHave"]);
         string FlyoutTextBackup = "";
         InterstitialAd myInterstitialAd = null;
+        string currency = "£";
 #if DEBUG
         string myAppId = "3f83fe91-d6be-434d-a0ae-7351c5a997f1";
         string myAdUnitId = "test";
@@ -43,6 +37,7 @@ namespace Pocketeer
         {
             InitializeComponent();
             MoneyClass.UpdateTileNotifications();
+            MoneyClass.AddAcrylicBrush(grid, null);
             myInterstitialAd = new InterstitialAd();
             myInterstitialAd.AdReady += MyInterstitialAd_AdReady;
             myInterstitialAd.ErrorOccurred += MyInterstitialAd_ErrorOccurred;
@@ -54,12 +49,12 @@ namespace Pocketeer
         {
             if (localSettings.Values["Currency"] == null)
             {
-                TotalMoneyTextBlock.Text = $"You got £{TotalMoney.ToString("0.00")}";
+                TotalMoneyTextBlock.Text = $"£{TotalMoney.ToString("0.00")}";
             }
             else
             {
-                string currency = MoneyClass.currencysymbols[Convert.ToInt32(localSettings.Values["Currency"])];
-                TotalMoneyTextBlock.Text = $"You got {currency}{TotalMoney.ToString("0.00")}";
+                currency = MoneyClass.currencysymbols[Convert.ToInt32(localSettings.Values["Currency"])];
+                TotalMoneyTextBlock.Text = $"{currency}{TotalMoney.ToString("0.00")}";
             }
         }
 
@@ -221,16 +216,16 @@ namespace Pocketeer
             {
                 if (localSettings.Values["Currency"] == null)
                 {
-                    HowMuchMoneyUserGetsTextBlock.Text = $"You get £{Convert.ToDouble(MoneyUserGets).ToString("0.00")}";
+                    HowMuchMoneyUserGetsTextBlock.Text = $"£{Convert.ToDouble(MoneyUserGets).ToString("0.00")}";
                 }
                 else
                 {
                     string currency = MoneyClass.currencysymbols[Convert.ToInt32(localSettings.Values["Currency"])];
-                    HowMuchMoneyUserGetsTextBlock.Text = $"You get {currency}{Convert.ToDouble(MoneyUserGets).ToString("0.00")}";
+                    HowMuchMoneyUserGetsTextBlock.Text = $"{currency}{Convert.ToDouble(MoneyUserGets).ToString("0.00")}";
                 }
                 DateTime DateMoneyIsAddedToTotalDateTime = DateTime.Now;
                 DateMoneyIsAddedToTotalDateTime = Convert.ToDateTime(localSettings.Values["WhatDayDoesUserGetMoney"]);
-                WhatDayMoneyTextBlock.Text = $"You get your money on {DateMoneyIsAddedToTotalDateTime.ToString("dd/MM/yy")}";
+                WhatDayMoneyTextBlock.Text = $"{DateMoneyIsAddedToTotalDateTime.ToString("dd/MM/yy")}";
                 if (elapsedint >= 7)
                 {
                     string weeks = "week";
@@ -248,16 +243,17 @@ namespace Pocketeer
                     }
                     if (day <= 0)
                     {
-                        WhenDayMoneyGetsAddedTextBlock.Text = $"That is in {week} {weeks}";
+                        WhenDayMoneyGetsAddedTextBlock.Text = $"{week} {weeks}";
                     }
                     else
                     {
-                        WhenDayMoneyGetsAddedTextBlock.Text = $"That is in {week} {weeks} and {day} {days}";
+                        WhenDayMoneyGetsAddedTextBlock.Text = $"{week} {weeks} and {day} {days}";
                     }
                 }
                 else if (elapsedint <= 7)
                 {
-                    WhenDayMoneyGetsAddedTextBlock.Text = $"That is this {NextTimeMoneyNeedsToBeAdded.DayOfWeek}!";
+                    ThatInTextBlock.Text = "That this";
+                    WhenDayMoneyGetsAddedTextBlock.Text = $"{NextTimeMoneyNeedsToBeAdded.DayOfWeek}!";
                 }
             }
             MoneyClass.UpdateTileNotifications();
@@ -293,26 +289,6 @@ namespace Pocketeer
         {
             TextForAddOkButtonFlyout.Text = FlyoutTextBackup;
             AddMoneyButton.Flyout.Hide();
-        }
-
-        private void grid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (Window.Current.Bounds.Height <= 350 || Window.Current.Bounds.Width <= 460)
-            {
-                int fontsize = 20;
-                TotalMoneyTextBlock.FontSize = fontsize;
-                HowMuchMoneyUserGetsTextBlock.FontSize = fontsize;
-                WhatDayMoneyTextBlock.FontSize = fontsize;
-                WhenDayMoneyGetsAddedTextBlock.FontSize = fontsize;
-            }
-            else
-            {
-                int fontsize = 26;
-                TotalMoneyTextBlock.FontSize = fontsize;
-                HowMuchMoneyUserGetsTextBlock.FontSize = fontsize;
-                WhatDayMoneyTextBlock.FontSize = fontsize;
-                WhenDayMoneyGetsAddedTextBlock.FontSize = fontsize;
-            }
         }
     }
 }

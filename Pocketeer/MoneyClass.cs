@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using Windows.UI.Notifications;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation.Metadata;
+using Windows.UI;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 namespace Pocketeer
 {
@@ -16,6 +20,9 @@ namespace Pocketeer
         static Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         public static List<string> currencysymbols = new List<string>();
         public static bool ShowAds = true;
+        public static bool DoesAcrylicBrushWorks = true;
+        public static Color color = new Color();
+        public static bool EnabledTint = false;
 
         public static void ResetItems()
         {
@@ -33,6 +40,49 @@ namespace Pocketeer
                     localSettings.Values[$"Item{itemint}Price"] = null;
                     localSettings.Values[$"Item{itemint}Link"] = null;
                     itemint++;
+                }
+            }
+        }
+
+        public static void AddAcrylicBrush(Grid grid, Rectangle rectangle)
+        {
+            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase") && DoesAcrylicBrushWorks)
+            {
+                AcrylicBrush myBrush = new AcrylicBrush();
+                myBrush.BackgroundSource = AcrylicBackgroundSource.HostBackdrop;
+                if (App.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Dark)
+                {
+                    if (EnabledTint || localSettings.Values["CustomEnabled"] != null)
+                    {
+                        myBrush.TintColor = color;
+                    }
+                    else
+                    {
+                        myBrush.TintColor = Color.FromArgb(255, 0, 0, 0);
+                    }
+                    myBrush.FallbackColor = Color.FromArgb(255, 0, 0, 0);
+                }
+                else
+                {
+                    if (EnabledTint || localSettings.Values["CustomEnabled"] != null)
+                    {
+                        myBrush.TintColor = color;
+                    }
+                    else
+                    {
+                        myBrush.TintColor = Color.FromArgb(255, 255, 255, 255);
+                    }
+                    myBrush.FallbackColor = Color.FromArgb(255, 255, 255, 255);
+                }
+                myBrush.TintOpacity = 0.8;
+
+                if (grid != null)
+                {
+                    grid.Background = myBrush;
+                }
+                if (rectangle != null)
+                {
+                    rectangle.Fill = myBrush;
                 }
             }
         }

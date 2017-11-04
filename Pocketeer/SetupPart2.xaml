@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Loading="Grid_Loading" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Loading="Grid_Loading" Name="grid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -54,15 +54,6 @@
         <TextBlock TextWrapping="WrapWholeWords" Name="HowMuchMoneyDoesUserHaveTextBlock" Text="How much money do you have?" Padding="10,0,10,0" VerticalAlignment="Center" Grid.Row="5" />
         <TextBox Name="HowMuchMoneyDoesUserHaveTextBox" PlaceholderText="Input money" TextChanged="HowMuchMoneyDoesUserHaveTextBox_TextChanged" Grid.Row="5" Grid.Column="1" Height="10" VerticalAlignment="Center" />
 
-        <Button Name="NextButton" IsEnabled="False" Click="NextButton_Click" Content="Save" Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="3">
-            <Button.Flyout>
-                <Flyout>
-                    <StackPanel Name="NextButtonStackPanel">
-                        <TextBlock Name="NextButtonFlyoutTextBlock" TextWrapping="WrapWholeWords" Text="You need to input the money in as 1.00 or 1" Padding="0,0,0,5"/>
-                        <Button Name="OkButton" Click="OkButton_Click" Content="Ok"/>
-                    </StackPanel>
-                </Flyout>
-            </Button.Flyout>
-        </Button>
+        <Button Name="NextButton" IsEnabled="False" Click="NextButton_Click" Content="Save" Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="3"/>
     </Grid>
 </Page>

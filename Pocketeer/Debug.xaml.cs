@@ -30,6 +30,7 @@ namespace Pocketeer
         public Debug()
         {
             this.InitializeComponent();
+            MoneyClass.AddAcrylicBrush(grid, null);
         }
 
         private async void Grid_Loading(FrameworkElement sender, object args)

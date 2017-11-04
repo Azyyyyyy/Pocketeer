@@ -13,41 +13,45 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-       <!-- Top of Pocketeer UI -->
-        <RelativePanel>
-            <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" RelativePanel.RightOf="MySplitViewButton" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True"/>
-            <UI:AdControl ApplicationId="9n3h90r55cr1" Visibility="Visible" Name="Ad" AdUnitId="11700910" HorizontalAlignment="Center" VerticalAlignment="Center" RelativePanel.AlignRightWithPanel="True" Width="320" Height="50" Grid.ColumnSpan="3"/>
-            <Button FontSize="22" Width="50" Foreground="White" Style="{StaticResource NavigationBackButtonNormalStyle}" Height="50" PointerEntered="MySplitViewButton_PointerEntered" Click="MySplitViewButton_Click" Name="MySplitViewButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"/>
-            <TextBlock FontSize="20" Name="PageUserIsOn" Text="Infomation" Style="{ThemeResource TitleTextBlockStyle}" RelativePanel.RightOf="MySplitViewButton" Padding="20,0,0,0" RelativePanel.AlignVerticalCenterWith="MySplitViewButton"/> 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Button FontSize="22" Width="50" Foreground="White" Style="{StaticResource NavigationBackButtonNormalStyle}" Height="50" Click="MySplitViewButton_Click" Name="MySplitViewButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"/>
+        <UI:AdControl ApplicationId="9n3h90r55cr1" Grid.RowSpan="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Name="Ad" AdUnitId="11700910" Width="320" Height="50"/>
+
+        <!-- Top of Pocketeer UI -->
+        <RelativePanel Grid.Column="1" Name="TopUI">
+            <Rectangle Name="RecPageUserIsOn" Fill="{ThemeResource AppBarBackgroundThemeBrush}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True"/>
+            <TextBlock RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="20" Name="PageUserIsOn" Text="Infomation" Style="{ThemeResource TitleTextBlockStyle}"/> 
         </RelativePanel>
         
         <!-- Navbar -->
-        <SplitView Name="MySplitView" Grid.Row="1" OpenPaneLength="150" DisplayMode="CompactOverlay">
+        <SplitView Name="MySplitView" Grid.Row="1" Grid.ColumnSpan="2" DisplayMode="CompactOverlay">
             <SplitView.Pane>
                 <ListBox Name="MySplitViewListBox" SelectionChanged="MySplitViewListBox_SelectionChanged">
-                    <ListBoxItem IsSelected="True">
+                    <ListBoxItem IsSelected="True" VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Name="InfomationIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE13D;" FontSize="22" VerticalAlignment="Center"/>
-                            <TextBlock Name="InfomationTextBlock" Text="Infomation" FontSize="16" Padding="20,0,0,0"/>
+                            <TextBlock Name="InfomationIcon" FontFamily="Segoe MDL2 Assets" Padding="0,0,20,0" Text="&#xE13D;" FontSize="22" VerticalAlignment="Center"/>
+                            <TextBlock Name="InfomationTextBlock" Text="Infomation" FontSize="16"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Name="WishListIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE1CF;" FontSize="22" VerticalAlignment="Center"/>
-                            <TextBlock Name="WishListTextBlock" Text="Wish List" FontSize="16" Padding="20,0,0,0"/>
+                            <TextBlock Name="WishListIcon" FontFamily="Segoe MDL2 Assets" Padding="0,0,20,0" Text="&#xE1CF;" FontSize="22" VerticalAlignment="Center"/>
+                            <TextBlock Name="WishListTextBlock" Text="Wish List" FontSize="16"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem Name="LBIDebug" Visibility="Collapsed">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Name="DebugIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE148;" FontSize="22" VerticalAlignment="Center"/>
-                            <TextBlock Name="DebugTextBlock" Text="Debug" FontSize="16" Padding="20,0,0,0"/>
+                            <TextBlock Name="DebugIcon" FontFamily="Segoe MDL2 Assets" Padding="0,0,20,0" Text="&#xE148;" FontSize="22" VerticalAlignment="Center"/>
+                            <TextBlock Name="DebugTextBlock" Text="Debug" FontSize="16"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="22" VerticalAlignment="Center"/>
-                            <TextBlock Name="SettingsTextBlock" Text="Settings" FontSize="16" Padding="20,0,0,0"/>
+                            <TextBlock Name="SettingsIcon" FontFamily="Segoe MDL2 Assets" Padding="0,0,20,0" Text="&#xE115;" FontSize="22" VerticalAlignment="Center"/>
+                            <TextBlock Name="SettingsTextBlock" Text="Settings" FontSize="16"/>
                         </StackPanel>
                     </ListBoxItem>
                 </ListBox>

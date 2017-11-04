@@ -25,23 +25,30 @@
                 </RelativePanel>
 
                 <StackPanel Grid.Row="1">
-                    <TextBlock Padding="0,20,0,0" FontSize="40" Text="Theme"/>
-                    <RadioButton Name="LightRadioButton" Click="LightRadioButton_Click">
-                        <RadioButton.Content>
-                            <TextBlock Text="Light"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-                    <RadioButton Name="DarkRadioButton" Click="DarkRadioButton_Click">
-                        <RadioButton.Content>
-                            <TextBlock Text="Dark"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-                    <RadioButton Name="UseSystemThemeRadioButton" Click="UseSystemThemeRadioButton_Click">
-                        <RadioButton.Content>
-                            <TextBlock TextWrapping="WrapWholeWords" Text="Use system theme"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-                    <TextBlock Visibility="Collapsed" Name="apprestarttextblock" TextWrapping="WrapWholeWords" Text="* App will need to be restarted to take effect"/>
+                    <StackPanel>
+                            <TextBlock Padding="0,20,0,0" FontSize="40" Text="Theme"/>
+                            <RadioButton Name="LightRadioButton" Click="LightRadioButton_Click">
+                                <RadioButton.Content>
+                                    <TextBlock Text="Light"/>
+                                </RadioButton.Content>
+                            </RadioButton>
+                            <RadioButton Name="DarkRadioButton" Click="DarkRadioButton_Click">
+                                <RadioButton.Content>
+                                    <TextBlock Text="Dark"/>
+                                </RadioButton.Content>
+                            </RadioButton>
+                            <RadioButton Name="UseSystemThemeRadioButton" Click="UseSystemThemeRadioButton_Click">
+                                <RadioButton.Content>
+                                    <TextBlock TextWrapping="WrapWholeWords" Text="Use system theme"/>
+                                </RadioButton.Content>
+                            </RadioButton>
+                        <RadioButton Name="CustomThemeRadioButton" Visibility="Collapsed" Click="CustomThemeRadioButton_Click">
+                            <RadioButton.Content>
+                                <TextBlock TextWrapping="WrapWholeWords" Text="Use a colour of your choice!"/>
+                            </RadioButton.Content>
+                        </RadioButton>
+                    </StackPanel>
+                        <TextBlock Visibility="Collapsed" Name="apprestarttextblock" TextWrapping="WrapWholeWords" Text="* App will need to be restarted to take effect"/>
                     <StackPanel Orientation="Horizontal" Padding="0,10,0,0">
                         <Image Source="github(black)-icon.png" VerticalAlignment="Center" Name="GithubIcon" Width="25" Height="25"/>
                         <HyperlinkButton Padding="20,0,0,0" VerticalAlignment="Center" NavigateUri="http://www.github.com/DMP9Labs/Pocketeer" Content="Click this to see what makes me tick!"/>
@@ -54,9 +61,10 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" VerticalAlignment="Top" Orientation="Vertical">
-                    <Button Name="ResetDataButton" Margin="0,0,0,5" Content="Reset data">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Name="ResetDataButton" Margin="0,0,0,5" Content="Reset data">
                         <Button.Flyout>
-                            <Flyout Placement="Top" LightDismissOverlayMode="On" AllowFocusOnInteraction="True">
+                            <Flyout Placement="Top" LightDismissOverlayMode="On">
                                 <StackPanel HorizontalAlignment="Stretch">
                                     <TextBlock TextWrapping="WrapWholeWords" Margin="0,0,0,5" Text="Do you want to backup your data before doing this?"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
@@ -67,11 +75,13 @@
                             </Flyout>
                         </Button.Flyout>
                     </Button>
-                    <StackPanel Orientation="Horizontal">
+                    <Button Content="Pin me to the taskbar!" Margin="5,0,0,5" Visibility="Collapsed" Click="PinToTaskBar_Click" Name="PinToTaskBar"/>
+                    </StackPanel>
+                            <StackPanel Orientation="Horizontal">
                         <Button Margin="0,0,5,0" Content="Make a backup" Name="BackupButton" Click="BackupButton_Click"/>
                         <Button Content="Restore from a backup" Name="RestoreButton" Click="RestoreButton_Click"/>
                     </StackPanel>
-                    <Button Margin="0,5,0,5" Content="Remove Ads" Name="RemoveAdsButton" Click="RemoveAdsButton_Click"/>
+                    <Button Margin="0,5,0,5" Content="Remove Ads" Name="RemoveAdsButton" Visibility="Collapsed" Click="RemoveAdsButton_Click"/>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <TextBlock VerticalAlignment="Center" Text="Currency: " Margin="0,0,5,0"/>
                         <ComboBox Margin="0,0,0,0" x:Name="CurrencyChoose" SelectionChanged="CurrencyChoose_SelectionChanged">

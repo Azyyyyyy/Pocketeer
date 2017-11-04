@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Net;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -43,6 +44,7 @@ namespace Pocketeer
         public WishList()
         {
             InitializeComponent();
+            MoneyClass.AddAcrylicBrush(grid, null);
         }
 
         void AddInfomation(string Name, double TotalMoneyNeeded)
@@ -89,7 +91,7 @@ namespace Pocketeer
             TextBlock AmountOfMoneyNeededTBL = new TextBlock();
             if (MoneyUntilUserCanGetItem > 0)
             {
-                AmountOfMoneyNeededTBL.Text = $"Amount of money needed to get your {Name}: {Currency}{MoneyUntilUserCanGetItem}";
+                AmountOfMoneyNeededTBL.Text = $"Amount of money needed to get your {Name}: {Currency}{MoneyUntilUserCanGetItem.ToString("0.00")}";
             }
             else
             {
@@ -99,7 +101,7 @@ namespace Pocketeer
             AmountOfMoneyNeededTBL.Margin = Margin0500;
             AmountOfMoneyNeededTBL.TextWrapping = TextWrapping.WrapWholeWords;
             TextBlock AmountOfMoneyItemCostsTBL = new TextBlock();
-            AmountOfMoneyItemCostsTBL.Text = $"Amount of money {An} {Name} cost: {Currency}{TotalMoneyNeeded}";
+            AmountOfMoneyItemCostsTBL.Text = $"Amount of money {An} {Name} cost: {Currency}{TotalMoneyNeeded.ToString("0.00")}";
             AmountOfMoneyItemCostsTBL.Margin = Margin0500;
             AmountOfMoneyItemCostsTBL.TextWrapping = TextWrapping.WrapWholeWords;
             Button EditItemButton = new Button();
@@ -201,6 +203,24 @@ namespace Pocketeer
 
         private void Grid_Loading(FrameworkElement sender, object args)
         {
+            //string thing = String.Empty;
+            //try
+            //{
+            //    WebRequest request = WebRequest.Create("https://www.amazon.co.uk/Wireless-Patuoxun-Computer-Receiver-Adjustment/dp/B01ESZJSUK/ref=sr_1_3?ie=UTF8&qid=1507144280&sr=8-3&keywords=mouse");
+            //    WebResponse response = await request.GetResponseAsync();
+            //    Stream data = response.GetResponseStream();
+            //    string[] html = { };
+            //    using (StreamReader sr = new StreamReader(data))
+            //    {
+            //        string[] Temp = { sr.ReadToEnd() };
+            //        html.Split(',');
+            //        html = Temp;
+            //        thing = html[5945].ToString();
+            //    }
+            //}
+            //catch
+            //{
+            //}
             NumberOfItem = 0;
             TotalMoneyUserHas = localSettings.Values["HowMuchMoneyDoesUserHave"].ToString();
             AmountOfMoneyUserGets = Convert.ToDouble(localSettings.Values["HowMuchMoneyDoesUserGet"]);
@@ -283,7 +303,9 @@ namespace Pocketeer
                 int ItemNumber = Convert.ToInt32(((Button)sender).Tag);
                 try
                 {
-                    Convert.ToDouble(ProductPriceBox.Text);
+                    ProductPriceBox.Text = rgx.Replace(ProductPriceBox.Text, replacement);
+                    ProductNameTBL.Text = ProductNameBox.Text;
+                    Double Check = Convert.ToDouble(ProductPriceBox.Text);
 
                     string Week = "week";
                     string Day = "day";
@@ -292,8 +314,6 @@ namespace Pocketeer
                     {
                         An = "a";
                     }
-                    ProductPriceBox.Text = rgx.Replace(ProductPriceBox.Text, replacement);
-                    ProductNameTBL.Text = ProductNameBox.Text;
                     string DaysUntil = $"and {elapseddouble} ";
                     if (elapseddouble >= 2)
                     {
@@ -311,7 +331,7 @@ namespace Pocketeer
 
                     if (MoneyUntilUserCanGetItem > 0)
                     {
-                        AmountOfMoneyLeftTBL.Text = $"Amount of money needed to get your {ProductNameBox.Text}: {Currency}{(Convert.ToDouble(ProductPriceBox.Text) - Convert.ToDouble(TotalMoneyUserHas))}";
+                        AmountOfMoneyLeftTBL.Text = $"Amount of money needed to get your {ProductNameBox.Text}: {Currency}{((Convert.ToDouble(ProductPriceBox.Text) - Convert.ToDouble(TotalMoneyUserHas))).ToString("0.00")}";
                         AmountOfTimeLeftTBL.Visibility = Visibility.Visible;
                     }
                     else
@@ -345,7 +365,7 @@ namespace Pocketeer
                         weeksuntil = "this " + Convert.ToDateTime(localSettings.Values["WhenMoneyNeedsGoingIn"]).DayOfWeek.ToString().ToLower();
                     }
                     AmountOfTimeLeftTBL.Text = $"If you don't spend any money you can get {An} {ProductNameBox.Text} {weeksuntil}";
-                    AmountOfMoneyItemCosts.Text = $"Amount of money {An} {ProductNameBox.Text} cost: {Currency}" + ProductPriceBox.Text;
+                    AmountOfMoneyItemCosts.Text = $"Amount of money {An} {ProductNameBox.Text} cost: {Currency}{Convert.ToDouble(ProductPriceBox.Text).ToString("0.00")}";
                     GetItem.Content = $"Get {An} {ProductNameBox.Text}!";
                     localSettings.Values[$"Item{ItemNumber - TimesAnItemHasBeenDeleted}Name"] = ProductNameBox.Text;
                     localSettings.Values[$"Item{ItemNumber - TimesAnItemHasBeenDeleted}Price"] = ProductPriceBox.Text;
@@ -357,21 +377,18 @@ namespace Pocketeer
                     TextBlock NextButtonFlyoutTextBlock = new TextBlock();
                     NextButtonFlyoutTextBlock.Text = "Pocketeer can't handle that much money!";
                     flyout.Content = NextButtonFlyoutTextBlock;
-                    flyout.ShowAt((FrameworkElement)sender);
                 }
                 catch (FormatException)
                 {
                     TextBlock NextButtonFlyoutTextBlock = new TextBlock();
                     NextButtonFlyoutTextBlock.Text = "You need to input the money in as 1.00 or 1";
                     flyout.Content = NextButtonFlyoutTextBlock;
-                    flyout.ShowAt((FrameworkElement)sender);
                 }
                 catch
                 {
                     TextBlock NextButtonFlyoutTextBlock = new TextBlock();
                     NextButtonFlyoutTextBlock.Text = "An error has occurred, try again";
                     flyout.Content = NextButtonFlyoutTextBlock;
-                    flyout.ShowAt((FrameworkElement)sender);
                 }
             }
 #endif
@@ -395,7 +412,6 @@ namespace Pocketeer
                     "Data:" + Environment.NewLine + a.Data;
 
                     flyout.Content = FlyoutTextBlock;
-                    flyout.ShowAt((FrameworkElement)sender);
                 }
             }
 #endif
@@ -405,7 +421,6 @@ namespace Pocketeer
                 TextBlock NextButtonFlyoutTextBlock = new TextBlock();
                 NextButtonFlyoutTextBlock.Text = "You need to fill in all the infomation!";
                 flyout.Content = NextButtonFlyoutTextBlock;
-                flyout.ShowAt((FrameworkElement)sender);
             }
             else if (ProductLinkBox.Text.Length > 0)
             {
@@ -414,7 +429,6 @@ namespace Pocketeer
                     TextBlock NextButtonFlyoutTextBlock = new TextBlock();
                     NextButtonFlyoutTextBlock.Text = "Invalid Uri";
                     flyout.Content = NextButtonFlyoutTextBlock;
-                    flyout.ShowAt((FrameworkElement)sender);
                 }
                 else
                 {

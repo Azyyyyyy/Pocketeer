@@ -26,11 +26,12 @@ namespace Pocketeer
     public sealed partial class SetupPart2 : Page
     {
         Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-        string NextButtonFlyoutTextBlockBackup = "";
+        Flyout flyout = new Flyout();
 
         public SetupPart2()
         {
             this.InitializeComponent();
+            MoneyClass.AddAcrylicBrush(grid, null);
         }
 
         void DoesSaveButtonNeedToBeEnabled()
@@ -81,7 +82,6 @@ namespace Pocketeer
             Regex rgx = new Regex(pattern);
             HowMuchMoneyDoesUserGetTextBox.Text = rgx.Replace(HowMuchMoneyDoesUserGetTextBox.Text, "");
             HowMuchMoneyDoesUserHaveTextBox.Text = rgx.Replace(HowMuchMoneyDoesUserHaveTextBox.Text, "");
-            NextButton.Flyout.Hide();
             if (DoesUserGetMoney.IsOn)
             {
                 if (DateTime.Now.Date.DayOfWeek == DayOfWeek.Sunday && WhatDayDoesUserGetMoneyComboBox.SelectedIndex == 0)
@@ -321,33 +321,33 @@ namespace Pocketeer
                     localSettings.Values["HowMuchMoneyDoesUserGet"] = Convert.ToString(Convert.ToDouble(HowMuchMoneyDoesUserGetTextBox.Text.ToString()));
                     localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToString(Convert.ToDouble(HowMuchMoneyDoesUserHaveTextBox.Text.ToString()));
                     localSettings.Values["SetupNeeded"] = "false";
-                    NextButtonStackPanel.Visibility = Visibility.Collapsed;
                     await Task.Delay(250);
                     Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
                 }
 #if !DEBUG
                 catch (OverflowException)
                 {
-                    NextButton.Flyout.ShowAt(NextButton);
-                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    TextBlock NextButtonFlyoutTextBlock = new TextBlock();
                     NextButtonFlyoutTextBlock.Text = "Pocketeer can't handle that much money!";
+                    flyout.ShowAt(NextButton);
                 }
                 catch (FormatException)
                 {
-                    NextButton.Flyout.ShowAt(NextButton);
+                    TextBlock NextButtonFlyoutTextBlock = new TextBlock();
+                    NextButtonFlyoutTextBlock.Text = "You need to input the money in as 1.00 or 1";
+                    flyout.ShowAt(NextButton);
                 }
                 catch
                 {
-                    NextButton.Flyout.ShowAt(NextButton);
-                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    TextBlock NextButtonFlyoutTextBlock = new TextBlock();
                     NextButtonFlyoutTextBlock.Text = "An error has occurred, try again";
+                    flyout.ShowAt(NextButton);
                 }
 #endif
 #if DEBUG
                 catch (Exception a)
                 {
-                    NextButton.Flyout.ShowAt(NextButton);
-                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    TextBlock NextButtonFlyoutTextBlock = new TextBlock();
                     NextButtonFlyoutTextBlock.Height = 500;
                     NextButtonFlyoutTextBlock.Text =
                         "StackTrace:" + Environment.NewLine + 
@@ -363,6 +363,8 @@ namespace Pocketeer
                         "HelpLink:" + Environment.NewLine + 
                         a.HelpLink + Environment.NewLine + Environment.NewLine + 
                         "Data:" + Environment.NewLine + a.Data;
+                    flyout.Content = NextButtonFlyoutTextBlock;
+                    flyout.ShowAt(NextButton);
                 }
 #endif
             }
@@ -373,32 +375,33 @@ namespace Pocketeer
                     localSettings.Values["HowMuchMoneyDoesUserHave"] = Convert.ToString(Convert.ToDouble(HowMuchMoneyDoesUserHaveTextBox.Text.ToString()));
                     localSettings.Values["DoesUserGetMoney"] = "false";
                     localSettings.Values["SetupNeeded"] = "false";
-                    NextButtonStackPanel.Visibility = Visibility.Collapsed;
                     Frame.Navigate(typeof(FrameForInfoPlusSettingsXAML));
                 }
 #if !DEBUG
                 catch (OverflowException)
                 {
-                    NextButton.Flyout.ShowAt(NextButton);
-                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    TextBlock NextButtonFlyoutTextBlock = new TextBlock();
                     NextButtonFlyoutTextBlock.Text = "Pocketeer can't handle that much money!";
+                    flyout.ShowAt(NextButton);
                 }
                 catch (FormatException)
                 {
-                    NextButton.Flyout.ShowAt(NextButton);
+                    TextBlock NextButtonFlyoutTextBlock = new TextBlock();
+                    NextButtonFlyoutTextBlock.Text = "You need to input the money in as 1.00 or 1";
+                    flyout.ShowAt(NextButton);
                 }
                 catch
                 {
-                    NextButton.Flyout.ShowAt(NextButton);
-                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    TextBlock NextButtonFlyoutTextBlock = new TextBlock();
                     NextButtonFlyoutTextBlock.Text = "An error has occurred, try again";
+                    flyout.ShowAt(NextButton);
                 }
 #endif
 #if DEBUG
                 catch (Exception a)
                 {
-                    NextButton.Flyout.ShowAt(NextButton);
-                    NextButtonFlyoutTextBlockBackup = NextButtonFlyoutTextBlock.Text;
+                    TextBlock NextButtonFlyoutTextBlock = new TextBlock();
+                    NextButtonFlyoutTextBlock.Height = 500;
                     NextButtonFlyoutTextBlock.Text =
                         "StackTrace:" + Environment.NewLine +
                         a.StackTrace + Environment.NewLine + Environment.NewLine +
@@ -413,6 +416,8 @@ namespace Pocketeer
                         "HelpLink:" + Environment.NewLine +
                         a.HelpLink + Environment.NewLine + Environment.NewLine +
                         "Data:" + Environment.NewLine + a.Data;
+                    flyout.Content = NextButtonFlyoutTextBlock;
+                    flyout.ShowAt(NextButton);
                 }
 #endif
             }
@@ -529,15 +534,6 @@ namespace Pocketeer
         private void HowMuchMoneyDoesUserHaveTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             DoesSaveButtonNeedToBeEnabled();
-        }
-
-        private void OkButton_Click(object sender, RoutedEventArgs e)
-        {
-            NextButton.Flyout.Hide();
-            if (NextButtonFlyoutTextBlockBackup.Length >= 1)
-            {
-                NextButtonFlyoutTextBlock.Text = NextButtonFlyoutTextBlockBackup;
-            }
         }
 
         private void Grid_Loading(FrameworkElement sender, object args)
