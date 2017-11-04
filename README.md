@@ -1,3 +1,5 @@
 # [Pocketeer](https://code.ultz.ml/Ultz/Pocketeer)
 
-A UWP money manager. If you are viewing this on GitHub, please go [here](https://code.ultz.ml/Ultz/Pocketeer) to the new page. Issues and Pull Requests will get ignored here.
+If you are viewing this on GitHub, please go [here](https://code.ultz.ml/Ultz/Pocketeer) to the new page on our GitLab server. Issues and Pull Requests will get ignored on GitHub.
+
+Pocketeer is a UWP pocket money manager that is targeted at children that have an allowance for money. This app will let them see what money that they have to spend. Just make sure they remove the money from their account when they spend!
